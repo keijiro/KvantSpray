@@ -5,6 +5,12 @@
 // position.xyz = vertex position
 // texcoord.xy  = uv for PositionTex/RotationTex
 //
+// Texture format:
+// _PositionTex.xyz = particle position
+// _PositionTex.w   = life
+// _RotationTex.xyz = particle rotation
+// _RotstionTex.w   = scale factor
+//
 Shader "Hidden/Kvant/Spray/Surface"
 {
     Properties
@@ -12,14 +18,14 @@ Shader "Hidden/Kvant/Spray/Surface"
         _PositionTex  ("-", 2D)     = ""{}
         _RotationTex  ("-", 2D)     = ""{}
         _Color        ("-", Color)  = (1, 1, 1, 1)
-		_PbrParams    ("-", Vector) = (0.5, 0.5, 0, 0)
-        _ScaleParams  ("-", Vector) = (1, 1, 0, 0)
+        _PbrParams    ("-", Vector) = (0.5, 0.5, 0, 0) // (metalness, smoothness)
+        _ScaleParams  ("-", Vector) = (1, 1, 0, 0)     // (min scale, max scale)
         _BufferOffset ("-", Vector) = (0, 0, 0, 0)
     }
     SubShader
     {
         Tags { "RenderType"="Opaque" }
-        
+
         CGPROGRAM
 
         #pragma surface surf Standard vertex:vert
@@ -31,7 +37,7 @@ Shader "Hidden/Kvant/Spray/Surface"
         half2 _PbrParams;
 
         float2 _ScaleParams;
-        float4 _BufferOffset;
+        float2 _BufferOffset;
 
         struct Input
         {
@@ -58,19 +64,22 @@ Shader "Hidden/Kvant/Spray/Surface"
 
         void vert(inout appdata_full v)
         {
-            float2 uv = v.texcoord + _BufferOffset;
+            float2 uv = v.texcoord.xy + _BufferOffset;
 
             float4 p = tex2D(_PositionTex, uv);
             float4 r = tex2D(_RotationTex, uv);
 
-            // Get the scale factor from life (p.w) and scale (r.w).
+            // Get the scale factor.
             float s = lerp(_ScaleParams.x, _ScaleParams.y, r.w);
+
+            // Linear scaling animation with life.
+            // (0, 0) -> (0.1, 1) -> (0.9, 1) -> (1, 0)
             s *= min(1.0, 5.0 - abs(5.0 - p.w * 10));
 
-            // Recover the scalar component of the unit quaternion.
+            // Calculate the scalar component of the unit quaternion.
             r.w = sqrt(1.0 - dot(r.xyz, r.xyz));
 
-            // Apply the rotation and the scaling.
+            // Apply the rotation and the scale factor.
             v.vertex.xyz = rotate_vector(v.vertex.xyz, r) * s + p.xyz;
             v.normal = rotate_vector(v.normal, r);
         }
@@ -84,5 +93,5 @@ Shader "Hidden/Kvant/Spray/Surface"
         }
 
         ENDCG
-    } 
+    }
 }
