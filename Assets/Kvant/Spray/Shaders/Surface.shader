@@ -1,18 +1,20 @@
 ﻿//
-// Surface shader for Spray particles.
+// Surface shader for Spray
 //
-// Looks up the position and the rotation from the textures.
-// TEXCOORD0 is used for lookup.
+// Vertex format:
+// position.xyz = vertex position
+// texcoord.xy  = uv for PositionTex/RotationTex
 //
 Shader "Hidden/Kvant/Spray/Surface"
 {
     Properties
     {
-        _PositionTex    ("-", 2D)       = ""{}
-        _RotationTex    ("-", 2D)       = ""{}
-        _Color          ("-", Color)    = (1, 1, 1, 1)
-        _ScaleParams    ("-", Vector)   = (1, 1, 0, 0)
-        _BufferOffset   ("-", Vector)   = (0, 0, 0, 0)
+        _PositionTex  ("-", 2D)     = ""{}
+        _RotationTex  ("-", 2D)     = ""{}
+        _Color        ("-", Color)  = (1, 1, 1, 1)
+		_PbrParams    ("-", Vector) = (0.5, 0.5, 0, 0)
+        _ScaleParams  ("-", Vector) = (1, 1, 0, 0)
+        _BufferOffset ("-", Vector) = (0, 0, 0, 0)
     }
     SubShader
     {
@@ -20,12 +22,14 @@ Shader "Hidden/Kvant/Spray/Surface"
         
         CGPROGRAM
 
-        #pragma surface surf Lambert vertex:vert
-        #pragma glsl
+        #pragma surface surf Standard vertex:vert
 
         sampler2D _PositionTex;
         sampler2D _RotationTex;
-        float4 _Color;
+
+        half4 _Color;
+        half2 _PbrParams;
+
         float2 _ScaleParams;
         float4 _BufferOffset;
 
@@ -71,10 +75,12 @@ Shader "Hidden/Kvant/Spray/Surface"
             v.normal = rotate_vector(v.normal, r);
         }
 
-        void surf(Input IN, inout SurfaceOutput o)
+        void surf(Input IN, inout SurfaceOutputStandard o)
         {
             o.Albedo = _Color.rgb;
-            o.Alpha = 1;
+            o.Metallic = _PbrParams.x;
+            o.Smoothness = _PbrParams.y;
+            o.Alpha = _Color.a;
         }
 
         ENDCG
