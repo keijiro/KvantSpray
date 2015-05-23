@@ -326,6 +326,7 @@ namespace Kvant
         void OnDrawGizmosSelected()
         {
             Gizmos.color = Color.yellow;
+            Gizmos.matrix = transform.localToWorldMatrix;
             Gizmos.DrawWireCube(_emitterCenter, _emitterSize);
         }
 
