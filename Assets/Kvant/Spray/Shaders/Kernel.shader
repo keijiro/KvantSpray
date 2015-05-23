@@ -24,7 +24,7 @@ Shader "Hidden/Kvant/Spray/Kernel"
         _LifeParams  ("-", Vector) = (0.1, 1.2, 0, 0)
         _Direction   ("-", Vector) = (0, 0, 1, 0.2)
         _SpeedParams ("-", Vector) = (2, 10, 30, 200)
-        _NoiseParams ("-", Vector) = (0.2, 5, 1, 0)   // (frequency, speed, animation)
+        _NoiseParams ("-", Vector) = (0.2, 5, 1, 0)   // (frequency, amplitude, animation)
         _Config      ("-", Vector) = (0, 1, 0, 0)     // (throttle, random seed, dT)
     }
 
