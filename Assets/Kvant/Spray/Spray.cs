@@ -37,7 +37,11 @@ namespace Kvant
         [SerializeField] float _noiseAmplitude = 5.0f;
         [SerializeField] float _noiseAnimation = 1.0f;
 
+        [ColorUsage(true, true, 0, 8, 0.125f, 3)]
         [SerializeField] Color _color = Color.white;
+        [SerializeField] float _metallic = 0.5f;
+        [SerializeField] float _smoothness = 0.5f;
+
         [SerializeField] int _randomSeed = 0;
         [SerializeField] bool _debug;
 
@@ -294,6 +298,7 @@ namespace Kvant
             _surfaceMaterial.SetTexture("_PositionTex", _positionBuffer2);
             _surfaceMaterial.SetTexture("_RotationTex", _rotationBuffer2);
             _surfaceMaterial.SetColor("_Color", _color);
+            _surfaceMaterial.SetVector("_PbrParams", new Vector2(_metallic, _smoothness));
             _surfaceMaterial.SetVector("_ScaleParams", new Vector2(_minScale, _maxScale));
 
             var uv = new Vector2(0.5f / _positionBuffer2.width, 0);

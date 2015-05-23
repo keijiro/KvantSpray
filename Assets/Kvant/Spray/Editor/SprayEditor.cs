@@ -37,6 +37,9 @@ namespace Kvant
         SerializedProperty propNoiseAnimation;
 
         SerializedProperty propColor;
+        SerializedProperty propMetallic;
+        SerializedProperty propSmoothness;
+
         SerializedProperty propRandomSeed;
         SerializedProperty propDebug;
 
@@ -75,6 +78,9 @@ namespace Kvant
             propNoiseAnimation = serializedObject.FindProperty("_noiseAnimation");
 
             propColor          = serializedObject.FindProperty("_color");
+            propMetallic       = serializedObject.FindProperty("_metallic");
+            propSmoothness     = serializedObject.FindProperty("_smoothness");
+
             propRandomSeed     = serializedObject.FindProperty("_randomSeed");
             propDebug          = serializedObject.FindProperty("_debug");
 
@@ -157,6 +163,11 @@ namespace Kvant
             EditorGUILayout.Space();
 
             EditorGUILayout.PropertyField(propColor);
+            EditorGUILayout.Slider(propMetallic, 0.0f, 1.0f);
+            EditorGUILayout.Slider(propSmoothness, 0.0f, 1.0f);
+
+            EditorGUILayout.Space();
+
             EditorGUILayout.PropertyField(propRandomSeed);
             EditorGUILayout.PropertyField(propDebug);
 
