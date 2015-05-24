@@ -1,4 +1,4 @@
-﻿Shader "Hidden/Kvant/Spray/Debug Blit"
+﻿Shader "Hidden/Kvant/Spray/Debug"
 {
     Properties
     {

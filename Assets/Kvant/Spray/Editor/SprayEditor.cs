@@ -36,18 +36,23 @@ namespace Kvant
         SerializedProperty propNoiseAmplitude;
         SerializedProperty propNoiseAnimation;
 
+        SerializedProperty propShadingMode;
+        SerializedProperty propColorMode;
         SerializedProperty propColor;
+        SerializedProperty propColor2;
         SerializedProperty propMetallic;
         SerializedProperty propSmoothness;
 
         SerializedProperty propRandomSeed;
         SerializedProperty propDebug;
 
-        GUIContent textCenter;
-        GUIContent textSize;
-        GUIContent textFrequency;
-        GUIContent textAmplitude;
-        GUIContent textAnimation;
+        static GUIContent textNull      = new GUIContent("");
+        static GUIContent textEmpty     = new GUIContent(" ");
+        static GUIContent textCenter    = new GUIContent("Center");
+        static GUIContent textSize      = new GUIContent("Size");
+        static GUIContent textFrequency = new GUIContent("Frequency");
+        static GUIContent textAmplitude = new GUIContent("Amplitude");
+        static GUIContent textAnimation = new GUIContent("Animation");
 
         void OnEnable()
         {
@@ -77,18 +82,15 @@ namespace Kvant
             propNoiseAmplitude = serializedObject.FindProperty("_noiseAmplitude");
             propNoiseAnimation = serializedObject.FindProperty("_noiseAnimation");
 
+            propShadingMode    = serializedObject.FindProperty("_shadingMode");
+            propColorMode      = serializedObject.FindProperty("_colorMode");
             propColor          = serializedObject.FindProperty("_color");
+            propColor2         = serializedObject.FindProperty("_color2");
             propMetallic       = serializedObject.FindProperty("_metallic");
             propSmoothness     = serializedObject.FindProperty("_smoothness");
 
             propRandomSeed     = serializedObject.FindProperty("_randomSeed");
             propDebug          = serializedObject.FindProperty("_debug");
-
-            textCenter    = new GUIContent("Center");
-            textSize      = new GUIContent("Size");
-            textFrequency = new GUIContent("Frequency");
-            textAmplitude = new GUIContent("Amplitude");
-            textAnimation = new GUIContent("Animation");
         }
 
         void MinMaxSlider(string label, SerializedProperty propMin, SerializedProperty propMax, float minLimit, float maxLimit, string format)
@@ -162,9 +164,30 @@ namespace Kvant
 
             EditorGUILayout.Space();
 
-            EditorGUILayout.PropertyField(propColor);
-            EditorGUILayout.Slider(propMetallic, 0.0f, 1.0f);
-            EditorGUILayout.Slider(propSmoothness, 0.0f, 1.0f);
+            EditorGUILayout.PropertyField(propShadingMode);
+            if (propShadingMode.hasMultipleDifferentValues || propShadingMode.enumValueIndex < 2)
+            {
+                EditorGUI.indentLevel++;
+                EditorGUILayout.Slider(propMetallic, 0.0f, 1.0f);
+                EditorGUILayout.Slider(propSmoothness, 0.0f, 1.0f);
+                EditorGUI.indentLevel--;
+            }
+
+            EditorGUILayout.Space();
+
+            EditorGUILayout.PropertyField(propColorMode);
+            if (propColorMode.hasMultipleDifferentValues || propColorMode.enumValueIndex != 0)
+            {
+                EditorGUILayout.BeginHorizontal();
+                EditorGUILayout.PrefixLabel(textEmpty);
+                EditorGUILayout.PropertyField(propColor, textNull);
+                EditorGUILayout.PropertyField(propColor2, textNull);
+                EditorGUILayout.EndHorizontal();
+            }
+            else
+            {
+                EditorGUILayout.PropertyField(propColor, textEmpty);
+            }
 
             EditorGUILayout.Space();
 

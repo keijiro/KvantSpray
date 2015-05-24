@@ -25,7 +25,7 @@ Shader "Hidden/Kvant/Spray/Kernel"
         _Direction   ("-", Vector) = (0, 0, 1, 0.2)
         _SpeedParams ("-", Vector) = (2, 10, 30, 200)
         _NoiseParams ("-", Vector) = (0.2, 5, 1, 0)   // (frequency, amplitude, animation)
-        _Config      ("-", Vector) = (0, 1, 0, 0)     // (throttle, random seed, dT)
+        _Config      ("-", Vector) = (0, 1, 0, 0)     // (throttle, random seed, dT, time)
     }
 
     CGINCLUDE
@@ -42,7 +42,7 @@ Shader "Hidden/Kvant/Spray/Kernel"
     float4 _Direction;
     float4 _SpeedParams;
     float4 _NoiseParams;
-    float3 _Config;
+    float4 _Config;
 
     // PRNG function.
     float nrand(float2 uv, float salt)
@@ -64,7 +64,7 @@ Shader "Hidden/Kvant/Spray/Kernel"
     // Generate a new particle.
     float4 new_particle_position(float2 uv)
     {
-        float t = _Time.x;
+        float t = _Config.w;
 
         // Random position.
         float3 p = float3(nrand(uv, t + 1), nrand(uv, t + 2), nrand(uv, t + 3));
@@ -107,7 +107,7 @@ Shader "Hidden/Kvant/Spray/Kernel"
         v = normalize(v) * lerp(_SpeedParams.x, _SpeedParams.y, nrand(uv, 12));
 
         // Add a noise vector.
-        p = (p + _Time.y * _NoiseParams.z) * _NoiseParams.x;
+        p = (p + _Config.w * _NoiseParams.z) * _NoiseParams.x;
         float nx = cnoise(p + float3(138.2, 0, 0));
         float ny = cnoise(p + float3(0, 138.2, 0));
         float nz = cnoise(p + float3(0, 0, 138.2));
