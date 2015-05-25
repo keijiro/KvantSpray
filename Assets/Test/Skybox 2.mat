@@ -6,7 +6,7 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: Skybox
+  m_Name: Skybox 2
   m_Shader: {fileID: 103, guid: 0000000000000000f000000000000000, type: 0}
   m_ShaderKeywords: 
   m_LightmapFlags: 5
@@ -40,7 +40,7 @@ Material:
         first:
           name: _Tex
         second:
-          m_Texture: {fileID: 8900000, guid: 898e176f0875c40a3b0e46c2f5772ab4, type: 3}
+          m_Texture: {fileID: 8900000, guid: 09f34b2f71b31433998c520abc74b958, type: 3}
           m_Scale: {x: 1, y: 1}
           m_Offset: {x: 0, y: 0}
       data:
@@ -101,7 +101,7 @@ Material:
       data:
         first:
           name: _Exposure
-        second: .5
+        second: .870000005
       data:
         first:
           name: _Parallax
@@ -141,7 +141,7 @@ Material:
       data:
         first:
           name: _Rotation
-        second: 27
+        second: 312
     m_Colors:
       data:
         first:
