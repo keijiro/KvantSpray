@@ -7,7 +7,7 @@ using UnityEditor;
 
 namespace Kvant
 {
-    [CustomEditor(typeof(Spray))]
+    [CustomEditor(typeof(Spray)), CanEditMultipleObjects]
     public class SprayEditor : Editor
     {
         SerializedProperty propShapes;
