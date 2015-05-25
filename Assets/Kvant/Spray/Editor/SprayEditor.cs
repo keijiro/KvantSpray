@@ -37,11 +37,14 @@ namespace Kvant
         SerializedProperty propNoiseAnimation;
 
         SerializedProperty propShadingMode;
+        SerializedProperty propMetallic;
+        SerializedProperty propSmoothness;
+        SerializedProperty propCastShadows;
+        SerializedProperty propReceiveShadows;
+
         SerializedProperty propColorMode;
         SerializedProperty propColor;
         SerializedProperty propColor2;
-        SerializedProperty propMetallic;
-        SerializedProperty propSmoothness;
 
         SerializedProperty propRandomSeed;
         SerializedProperty propDebug;
@@ -83,11 +86,14 @@ namespace Kvant
             propNoiseAnimation = serializedObject.FindProperty("_noiseAnimation");
 
             propShadingMode    = serializedObject.FindProperty("_shadingMode");
+            propMetallic       = serializedObject.FindProperty("_metallic");
+            propSmoothness     = serializedObject.FindProperty("_smoothness");
+            propCastShadows    = serializedObject.FindProperty("_castShadows");
+            propReceiveShadows = serializedObject.FindProperty("_receiveShadows");
+
             propColorMode      = serializedObject.FindProperty("_colorMode");
             propColor          = serializedObject.FindProperty("_color");
             propColor2         = serializedObject.FindProperty("_color2");
-            propMetallic       = serializedObject.FindProperty("_metallic");
-            propSmoothness     = serializedObject.FindProperty("_smoothness");
 
             propRandomSeed     = serializedObject.FindProperty("_randomSeed");
             propDebug          = serializedObject.FindProperty("_debug");
@@ -170,6 +176,8 @@ namespace Kvant
                 EditorGUI.indentLevel++;
                 EditorGUILayout.Slider(propMetallic, 0.0f, 1.0f);
                 EditorGUILayout.Slider(propSmoothness, 0.0f, 1.0f);
+                EditorGUILayout.PropertyField(propCastShadows);
+                EditorGUILayout.PropertyField(propReceiveShadows);
                 EditorGUI.indentLevel--;
             }
 

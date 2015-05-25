@@ -3,6 +3,7 @@
 //
 
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace Kvant
 {
@@ -45,6 +46,8 @@ namespace Kvant
 
         [SerializeField] float _metallic = 0.5f;
         [SerializeField] float _smoothness = 0.5f;
+        [SerializeField] ShadowCastingMode _castShadows;
+        [SerializeField] bool _receiveShadows = false;
 
         public enum ColorMode {
             Single, Random, LinearAnimation
@@ -164,6 +167,16 @@ namespace Kvant
         public float smoothness {
             get { return _smoothness; }
             set { _smoothness = value; }
+        }
+
+        public ShadowCastingMode shadowCastingMode {
+            get { return _castShadows; }
+            set { _castShadows = value; }
+        }
+
+        public bool receiveShadows {
+            get { return _receiveShadows; }
+            set { _receiveShadows = value; }
         }
 
         public ColorMode colorMode {
@@ -418,7 +431,10 @@ namespace Kvant
             {
                 uv.y = (0.5f + i) / _positionBuffer2.height;
                 offs.AddVector("_BufferOffset", uv);
-                Graphics.DrawMesh(_bulkMesh.mesh, p, r, _displayMaterial, 0, null, 0, offs);
+                if (_shadingMode == ShadingMode.OpaquePBR)
+                    Graphics.DrawMesh(_bulkMesh.mesh, p, r, _displayMaterial, 0, null, 0, offs, _castShadows, _receiveShadows);
+                else
+                    Graphics.DrawMesh(_bulkMesh.mesh, p, r, _displayMaterial, 0, null, 0, offs, false, false);
             }
         }
 
