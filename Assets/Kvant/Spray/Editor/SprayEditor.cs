@@ -143,7 +143,7 @@ namespace Kvant
 
             EditorGUILayout.LabelField("Velocity");
             EditorGUI.indentLevel++;
-            MinMaxSlider("Speed", propMinSpeed, propMaxSpeed, 0.0f, 50.0f, "0.0");
+            MinMaxSlider("Speed", propMinSpeed, propMaxSpeed, 0.0f, 30.0f, "0.0");
             EditorGUILayout.PropertyField(propDirection);
             EditorGUILayout.Slider(propSpread, 0.0f, 1.0f);
             MinMaxSlider("Spin", propMinSpin, propMaxSpin, 0.0f, 1000.0f, "0");
@@ -154,7 +154,7 @@ namespace Kvant
             EditorGUILayout.LabelField("Turbulent Noise");
             EditorGUI.indentLevel++;
             EditorGUILayout.Slider(propNoiseFrequency, 0.01f, 1.0f, textFrequency);
-            EditorGUILayout.Slider(propNoiseAmplitude, 0.0f, 50.0f, textAmplitude);
+            EditorGUILayout.Slider(propNoiseAmplitude, 0.0f, 20.0f, textAmplitude);
             EditorGUILayout.Slider(propNoiseAnimation, 0.0f, 10.0f, textAnimation);
             EditorGUI.indentLevel--;
 
@@ -166,7 +166,7 @@ namespace Kvant
 
             EditorGUILayout.Space();
 
-            MinMaxSlider("Scale", propMinScale, propMaxScale, 0.01f, 5.0f, "0.00");
+            MinMaxSlider("Scale", propMinScale, propMaxScale, 0.01f, 2.0f, "0.00");
 
             EditorGUILayout.Space();
 
