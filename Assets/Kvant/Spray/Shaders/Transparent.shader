@@ -31,6 +31,8 @@ Shader "Hidden/Kvant/Spray/Transparent PBR"
 
         #pragma multi_compile COLOR_SINGLE COLOR_ANIMATE COLOR_RANDOM
 
+        #pragma target 3.0
+
         #pragma surface surf Standard vertex:vert nolightmap noshadow alpha:fade
 
         #include "Common.cginc"
