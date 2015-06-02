@@ -1,7 +1,6 @@
 ﻿//
 // Spray - mesh particle system
 //
-
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -12,55 +11,94 @@ namespace Kvant
     {
         #region Parameters Exposed To Editor
 
-        [SerializeField] int _maxParticles = 1000;
+        [SerializeField]
+        int _maxParticles = 1000;
 
-        [SerializeField] Vector3 _emitterCenter = Vector3.zero;
-        [SerializeField] Vector3 _emitterSize = Vector3.one;
-        [SerializeField] float _throttle = 1.0f;
+        [SerializeField]
+        Vector3 _emitterCenter = Vector3.zero;
 
-        [SerializeField] float _minLife = 1.0f;
-        [SerializeField] float _maxLife = 4.0f;
+        [SerializeField]
+        Vector3 _emitterSize = Vector3.one;
 
-        [SerializeField] Vector3 _direction = Vector3.forward;
-        [SerializeField] float _spread = 0.2f;
+        [SerializeField, Range(0, 1)]
+        float _throttle = 1.0f;
 
-        [SerializeField] float _minSpeed = 2.0f;
-        [SerializeField] float _maxSpeed = 10.0f;
+        [SerializeField]
+        float _minLife = 1.0f;
 
-        [SerializeField] float _minSpin = 30.0f;
-        [SerializeField] float _maxSpin = 200.0f;
+        [SerializeField]
+        float _maxLife = 4.0f;
 
-        [SerializeField] float _noiseFrequency = 0.2f;
-        [SerializeField] float _noiseAmplitude = 5.0f;
-        [SerializeField] float _noiseAnimation = 1.0f;
+        [SerializeField]
+        float _minSpeed = 2.0f;
 
-        [SerializeField] Mesh[] _shapes = new Mesh[1];
+        [SerializeField]
+        float _maxSpeed = 10.0f;
 
-        [SerializeField] float _minScale = 0.1f;
-        [SerializeField] float _maxScale = 1.2f;
+        [SerializeField]
+        Vector3 _direction = Vector3.forward;
+
+        [SerializeField, Range(0, 1)]
+        float _spread = 0.2f;
+
+        [SerializeField]
+        float _minSpin = 30.0f;
+
+        [SerializeField]
+        float _maxSpin = 200.0f;
+
+        [SerializeField]
+        float _noiseFrequency = 0.2f;
+
+        [SerializeField]
+        float _noiseAmplitude = 5.0f;
+
+        [SerializeField]
+        float _noiseAnimation = 1.0f;
+
+        [SerializeField]
+        Mesh[] _shapes = new Mesh[1];
+
+        [SerializeField]
+        float _minScale = 0.1f;
+
+        [SerializeField]
+        float _maxScale = 1.2f;
 
         public enum ShadingMode {
             OpaquePBR, TransparentPBR, TransparentUnlit, AdditiveUnlit
         }
-        [SerializeField] ShadingMode _shadingMode;
 
-        [SerializeField] float _metallic = 0.5f;
-        [SerializeField] float _smoothness = 0.5f;
-        [SerializeField] ShadowCastingMode _castShadows;
-        [SerializeField] bool _receiveShadows = false;
+        [SerializeField]
+        ShadingMode _shadingMode;
 
-        public enum ColorMode {
-            Single, Random, LinearAnimation
-        }
+        [SerializeField, Range(0, 1)]
+        float _metallic = 0.5f;
+
+        [SerializeField, Range(0, 1)]
+        float _smoothness = 0.5f;
+
+        [SerializeField]
+        ShadowCastingMode _castShadows;
+
+        [SerializeField]
+        bool _receiveShadows = false;
+
+        public enum ColorMode { Single, Random, LinearAnimation }
+
         [SerializeField] ColorMode _colorMode;
 
-        [ColorUsage(true, true, 0, 8, 0.125f, 3)]
-        [SerializeField] Color _color = Color.white;
-        [ColorUsage(true, true, 0, 8, 0.125f, 3)]
-        [SerializeField] Color _color2 = Color.gray;
+        [SerializeField, ColorUsage(true, true, 0, 8, 0.125f, 3)]
+        Color _color = Color.white;
 
-        [SerializeField] int _randomSeed = 0;
-        [SerializeField] bool _debug;
+        [SerializeField, ColorUsage(true, true, 0, 8, 0.125f, 3)]
+        Color _color2 = Color.gray;
+
+        [SerializeField]
+        int _randomSeed = 0;
+
+        [SerializeField]
+        bool _debug;
 
         #endregion
 
@@ -99,16 +137,6 @@ namespace Kvant
             set { _maxLife = value; }
         }
 
-        public Vector3 direction {
-            get { return _direction; }
-            set { _direction = value; }
-        }
-
-        public float spread {
-            get { return _spread; }
-            set { _spread = value; }
-        }
-
         public float minSpeed {
             get { return _minSpeed; }
             set { _minSpeed = value; }
@@ -117,6 +145,16 @@ namespace Kvant
         public float maxSpeed {
             get { return _maxSpeed; }
             set { _maxSpeed = value; }
+        }
+
+        public Vector3 direction {
+            get { return _direction; }
+            set { _direction = value; }
+        }
+
+        public float spread {
+            get { return _spread; }
+            set { _spread = value; }
         }
 
         public float minSpin {

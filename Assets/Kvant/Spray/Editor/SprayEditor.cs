@@ -1,7 +1,6 @@
 //
 // Custom editor class for Spray
 //
-
 using UnityEngine;
 using UnityEditor;
 
@@ -10,109 +9,91 @@ namespace Kvant
     [CustomEditor(typeof(Spray)), CanEditMultipleObjects]
     public class SprayEditor : Editor
     {
-        SerializedProperty propShapes;
-        SerializedProperty propMaxParticles;
+        SerializedProperty _maxParticles;
+        SerializedProperty _emitterCenter;
+        SerializedProperty _emitterSize;
+        SerializedProperty _throttle;
 
-        SerializedProperty propEmitterCenter;
-        SerializedProperty propEmitterSize;
-        SerializedProperty propThrottle;
+        SerializedProperty _minLife;
+        SerializedProperty _maxLife;
 
-        SerializedProperty propMinLife;
-        SerializedProperty propMaxLife;
+        SerializedProperty _minSpeed;
+        SerializedProperty _maxSpeed;
+        SerializedProperty _direction;
+        SerializedProperty _spread;
+        SerializedProperty _minSpin;
+        SerializedProperty _maxSpin;
 
-        SerializedProperty propMinScale;
-        SerializedProperty propMaxScale;
+        SerializedProperty _noiseFrequency;
+        SerializedProperty _noiseAmplitude;
+        SerializedProperty _noiseAnimation;
 
-        SerializedProperty propDirection;
-        SerializedProperty propSpread;
+        SerializedProperty _shapes;
+        SerializedProperty _minScale;
+        SerializedProperty _maxScale;
 
-        SerializedProperty propMinSpeed;
-        SerializedProperty propMaxSpeed;
+        SerializedProperty _shadingMode;
+        SerializedProperty _metallic;
+        SerializedProperty _smoothness;
+        SerializedProperty _castShadows;
+        SerializedProperty _receiveShadows;
 
-        SerializedProperty propMinSpin;
-        SerializedProperty propMaxSpin;
+        SerializedProperty _colorMode;
+        SerializedProperty _color;
+        SerializedProperty _color2;
 
-        SerializedProperty propNoiseFrequency;
-        SerializedProperty propNoiseAmplitude;
-        SerializedProperty propNoiseAnimation;
+        SerializedProperty _randomSeed;
+        SerializedProperty _debug;
 
-        SerializedProperty propShadingMode;
-        SerializedProperty propMetallic;
-        SerializedProperty propSmoothness;
-        SerializedProperty propCastShadows;
-        SerializedProperty propReceiveShadows;
-
-        SerializedProperty propColorMode;
-        SerializedProperty propColor;
-        SerializedProperty propColor2;
-
-        SerializedProperty propRandomSeed;
-        SerializedProperty propDebug;
-
-        static GUIContent textNull      = new GUIContent("");
-        static GUIContent textEmpty     = new GUIContent(" ");
-        static GUIContent textCenter    = new GUIContent("Center");
-        static GUIContent textSize      = new GUIContent("Size");
-        static GUIContent textFrequency = new GUIContent("Frequency");
-        static GUIContent textAmplitude = new GUIContent("Amplitude");
-        static GUIContent textAnimation = new GUIContent("Animation");
+        static GUIContent _textCenter    = new GUIContent("Center");
+        static GUIContent _textSize      = new GUIContent("Size");
+        static GUIContent _textLife      = new GUIContent("Life");
+        static GUIContent _textSpeed     = new GUIContent("Speed");
+        static GUIContent _textSpin      = new GUIContent("Spin");
+        static GUIContent _textFrequency = new GUIContent("Frequency");
+        static GUIContent _textAmplitude = new GUIContent("Amplitude");
+        static GUIContent _textAnimation = new GUIContent("Animation");
+        static GUIContent _textScale     = new GUIContent("Scale");
+        static GUIContent _textNull      = new GUIContent("");
+        static GUIContent _textEmpty     = new GUIContent(" ");
 
         void OnEnable()
         {
-            propShapes         = serializedObject.FindProperty("_shapes");
-            propMaxParticles   = serializedObject.FindProperty("_maxParticles");
+            _maxParticles  = serializedObject.FindProperty("_maxParticles");
+            _emitterCenter = serializedObject.FindProperty("_emitterCenter");
+            _emitterSize   = serializedObject.FindProperty("_emitterSize");
+            _throttle      = serializedObject.FindProperty("_throttle");
 
-            propEmitterCenter  = serializedObject.FindProperty("_emitterCenter");
-            propEmitterSize    = serializedObject.FindProperty("_emitterSize");
-            propThrottle       = serializedObject.FindProperty("_throttle");
+            _minLife = serializedObject.FindProperty("_minLife");
+            _maxLife = serializedObject.FindProperty("_maxLife");
 
-            propMinLife        = serializedObject.FindProperty("_minLife");
-            propMaxLife        = serializedObject.FindProperty("_maxLife");
+            _minSpeed  = serializedObject.FindProperty("_minSpeed");
+            _maxSpeed  = serializedObject.FindProperty("_maxSpeed");
+            _direction = serializedObject.FindProperty("_direction");
+            _spread    = serializedObject.FindProperty("_spread");
+            _minSpin   = serializedObject.FindProperty("_minSpin");
+            _maxSpin   = serializedObject.FindProperty("_maxSpin");
 
-            propMinScale       = serializedObject.FindProperty("_minScale");
-            propMaxScale       = serializedObject.FindProperty("_maxScale");
+            _noiseFrequency = serializedObject.FindProperty("_noiseFrequency");
+            _noiseAmplitude = serializedObject.FindProperty("_noiseAmplitude");
+            _noiseAnimation = serializedObject.FindProperty("_noiseAnimation");
 
-            propDirection      = serializedObject.FindProperty("_direction");
-            propSpread         = serializedObject.FindProperty("_spread");
+            _shapes   = serializedObject.FindProperty("_shapes");
+            _minScale = serializedObject.FindProperty("_minScale");
+            _maxScale = serializedObject.FindProperty("_maxScale");
 
-            propMinSpeed       = serializedObject.FindProperty("_minSpeed");
-            propMaxSpeed       = serializedObject.FindProperty("_maxSpeed");
+            _shadingMode    = serializedObject.FindProperty("_shadingMode");
+            _metallic       = serializedObject.FindProperty("_metallic");
+            _smoothness     = serializedObject.FindProperty("_smoothness");
+            _castShadows    = serializedObject.FindProperty("_castShadows");
+            _receiveShadows = serializedObject.FindProperty("_receiveShadows");
 
-            propMinSpin        = serializedObject.FindProperty("_minSpin");
-            propMaxSpin        = serializedObject.FindProperty("_maxSpin");
+            _colorMode = serializedObject.FindProperty("_colorMode");
+            _color     = serializedObject.FindProperty("_color");
+            _color2    = serializedObject.FindProperty("_color2");
 
-            propNoiseFrequency = serializedObject.FindProperty("_noiseFrequency");
-            propNoiseAmplitude = serializedObject.FindProperty("_noiseAmplitude");
-            propNoiseAnimation = serializedObject.FindProperty("_noiseAnimation");
-
-            propShadingMode    = serializedObject.FindProperty("_shadingMode");
-            propMetallic       = serializedObject.FindProperty("_metallic");
-            propSmoothness     = serializedObject.FindProperty("_smoothness");
-            propCastShadows    = serializedObject.FindProperty("_castShadows");
-            propReceiveShadows = serializedObject.FindProperty("_receiveShadows");
-
-            propColorMode      = serializedObject.FindProperty("_colorMode");
-            propColor          = serializedObject.FindProperty("_color");
-            propColor2         = serializedObject.FindProperty("_color2");
-
-            propRandomSeed     = serializedObject.FindProperty("_randomSeed");
-            propDebug          = serializedObject.FindProperty("_debug");
-        }
-
-        void MinMaxSlider(string label, SerializedProperty propMin, SerializedProperty propMax, float minLimit, float maxLimit, string format)
-        {
-            var min = propMin.floatValue;
-            var max = propMax.floatValue;
-
-            EditorGUI.BeginChangeCheck();
-
-            var text = new GUIContent(label + " (" + min.ToString(format) + "-" + max.ToString(format) + ")");
-            EditorGUILayout.MinMaxSlider(text, ref min, ref max, minLimit, maxLimit);
-
-            if (EditorGUI.EndChangeCheck()) {
-                propMin.floatValue = min;
-                propMax.floatValue = max;
-            }
+            _randomSeed = serializedObject.FindProperty("_randomSeed");
+            _debug      = serializedObject.FindProperty("_debug");
         }
 
         public override void OnInspectorGUI()
@@ -122,87 +103,133 @@ namespace Kvant
             serializedObject.Update();
 
             EditorGUI.BeginChangeCheck();
-            EditorGUILayout.PropertyField(propMaxParticles);
-            EditorGUILayout.HelpBox("Actual Number: " + targetSpray.maxParticles, MessageType.None);
-            if (EditorGUI.EndChangeCheck()) targetSpray.NotifyConfigChange();
 
-            EditorGUILayout.Space();
+            EditorGUILayout.PropertyField(_maxParticles);
+            if (!_maxParticles.hasMultipleDifferentValues)
+                EditorGUILayout.LabelField(" ", "Allocated: " + targetSpray.maxParticles, EditorStyles.miniLabel);
 
-            EditorGUILayout.LabelField("Emitter");
+            if (EditorGUI.EndChangeCheck())
+                targetSpray.NotifyConfigChange();
+
+            EditorGUILayout.LabelField("Emitter", EditorStyles.boldLabel);
             EditorGUI.indentLevel++;
-            EditorGUILayout.PropertyField(propEmitterCenter, textCenter);
-            EditorGUILayout.PropertyField(propEmitterSize, textSize);
-            EditorGUILayout.Slider(propThrottle, 0.0f, 1.0f);
+            EditorGUILayout.PropertyField(_emitterCenter, _textCenter);
+            EditorGUILayout.PropertyField(_emitterSize, _textSize);
+            EditorGUILayout.PropertyField(_throttle);
             EditorGUI.indentLevel--;
 
             EditorGUILayout.Space();
 
-            MinMaxSlider("Life", propMinLife, propMaxLife, 0.1f, 5.0f, "0.00");
+            MinMaxSlider(_textLife, _minLife, _maxLife, 0.1f, 5.0f);
 
             EditorGUILayout.Space();
 
-            EditorGUILayout.LabelField("Velocity");
+            EditorGUILayout.LabelField("Velocity", EditorStyles.boldLabel);
             EditorGUI.indentLevel++;
-            MinMaxSlider("Speed", propMinSpeed, propMaxSpeed, 0.0f, 30.0f, "0.0");
-            EditorGUILayout.PropertyField(propDirection);
-            EditorGUILayout.Slider(propSpread, 0.0f, 1.0f);
-            MinMaxSlider("Spin", propMinSpin, propMaxSpin, 0.0f, 1000.0f, "0");
+            MinMaxSlider(_textSpeed, _minSpeed, _maxSpeed, 0.0f, 30.0f);
+            EditorGUILayout.PropertyField(_direction);
+            EditorGUILayout.PropertyField(_spread);
+            MinMaxSlider(_textSpin, _minSpin, _maxSpin, 0.0f, 1000.0f);
             EditorGUI.indentLevel--;
 
             EditorGUILayout.Space();
 
-            EditorGUILayout.LabelField("Turbulent Noise");
+            EditorGUILayout.LabelField("Turbulent Noise", EditorStyles.boldLabel);
             EditorGUI.indentLevel++;
-            EditorGUILayout.Slider(propNoiseFrequency, 0.01f, 1.0f, textFrequency);
-            EditorGUILayout.Slider(propNoiseAmplitude, 0.0f, 20.0f, textAmplitude);
-            EditorGUILayout.Slider(propNoiseAnimation, 0.0f, 10.0f, textAnimation);
+            EditorGUILayout.Slider(_noiseFrequency, 0.01f, 1.0f, _textFrequency);
+            EditorGUILayout.Slider(_noiseAmplitude, 0.0f, 20.0f, _textAmplitude);
+            EditorGUILayout.Slider(_noiseAnimation, 0.0f, 10.0f, _textAnimation);
             EditorGUI.indentLevel--;
 
             EditorGUILayout.Space();
 
             EditorGUI.BeginChangeCheck();
-            EditorGUILayout.PropertyField(propShapes, true);
-            if (EditorGUI.EndChangeCheck()) targetSpray.NotifyConfigChange();
+
+            EditorGUILayout.PropertyField(_shapes, true);
+
+            if (EditorGUI.EndChangeCheck())
+                targetSpray.NotifyConfigChange();
 
             EditorGUILayout.Space();
 
-            MinMaxSlider("Scale", propMinScale, propMaxScale, 0.01f, 2.0f, "0.00");
+            MinMaxSlider(_textScale, _minScale, _maxScale, 0.01f, 2.0f);
 
             EditorGUILayout.Space();
 
-            EditorGUILayout.PropertyField(propShadingMode);
-            if (propShadingMode.hasMultipleDifferentValues || propShadingMode.enumValueIndex < 2)
+            EditorGUILayout.PropertyField(_shadingMode);
+            if (_shadingMode.hasMultipleDifferentValues || _shadingMode.enumValueIndex < 2)
             {
                 EditorGUI.indentLevel++;
-                EditorGUILayout.Slider(propMetallic, 0.0f, 1.0f);
-                EditorGUILayout.Slider(propSmoothness, 0.0f, 1.0f);
-                EditorGUILayout.PropertyField(propCastShadows);
-                EditorGUILayout.PropertyField(propReceiveShadows);
+                EditorGUILayout.PropertyField(_metallic);
+                EditorGUILayout.PropertyField(_smoothness);
+                EditorGUILayout.PropertyField(_castShadows);
+                EditorGUILayout.PropertyField(_receiveShadows);
                 EditorGUI.indentLevel--;
             }
 
             EditorGUILayout.Space();
 
-            EditorGUILayout.PropertyField(propColorMode);
-            if (propColorMode.hasMultipleDifferentValues || propColorMode.enumValueIndex != 0)
+            EditorGUILayout.PropertyField(_colorMode);
+            if (_colorMode.hasMultipleDifferentValues || _colorMode.enumValueIndex != 0)
             {
                 EditorGUILayout.BeginHorizontal();
-                EditorGUILayout.PrefixLabel(textEmpty);
-                EditorGUILayout.PropertyField(propColor, textNull);
-                EditorGUILayout.PropertyField(propColor2, textNull);
+                EditorGUILayout.PrefixLabel(_textEmpty);
+                EditorGUILayout.PropertyField(_color, _textNull);
+                EditorGUILayout.PropertyField(_color2, _textNull);
                 EditorGUILayout.EndHorizontal();
             }
             else
             {
-                EditorGUILayout.PropertyField(propColor, textEmpty);
+                EditorGUILayout.PropertyField(_color, _textEmpty);
             }
 
             EditorGUILayout.Space();
 
-            EditorGUILayout.PropertyField(propRandomSeed);
-            EditorGUILayout.PropertyField(propDebug);
+            EditorGUILayout.PropertyField(_randomSeed);
+            EditorGUILayout.PropertyField(_debug);
 
             serializedObject.ApplyModifiedProperties();
+        }
+
+        void MinMaxSlider(GUIContent label, SerializedProperty propMin, SerializedProperty propMax, float minLimit, float maxLimit)
+        {
+            var min = propMin.floatValue;
+            var max = propMax.floatValue;
+
+            EditorGUI.BeginChangeCheck();
+
+            // Min-max slider.
+            EditorGUILayout.MinMaxSlider(label, ref min, ref max, minLimit, maxLimit);
+
+            var prevIndent = EditorGUI.indentLevel;
+            EditorGUI.indentLevel = 0;
+
+            // Float value boxes.
+            var rect = EditorGUILayout.GetControlRect();
+            rect.x += EditorGUIUtility.labelWidth;
+            rect.width = (rect.width - EditorGUIUtility.labelWidth) / 2 - 2;
+
+            if (EditorGUIUtility.wideMode)
+            {
+                EditorGUIUtility.labelWidth = 28;
+                min = Mathf.Clamp(EditorGUI.FloatField(rect, "min", min), minLimit, max);
+                rect.x += rect.width + 4;
+                max = Mathf.Clamp(EditorGUI.FloatField(rect, "max", max), min, maxLimit);
+                EditorGUIUtility.labelWidth = 0;
+            }
+            else
+            {
+                min = Mathf.Clamp(EditorGUI.FloatField(rect, min), minLimit, max);
+                rect.x += rect.width + 4;
+                max = Mathf.Clamp(EditorGUI.FloatField(rect, max), min, maxLimit);
+            }
+
+            EditorGUI.indentLevel = prevIndent;
+
+            if (EditorGUI.EndChangeCheck()) {
+                propMin.floatValue = min;
+                propMax.floatValue = max;
+            }
         }
     }
 }
