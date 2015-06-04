@@ -44,10 +44,10 @@ Shader "Hidden/Kvant/Spray/Opaque PBR"
 
         void vert(inout appdata_full v)
         {
-            float2 uv = v.texcoord.xy + _BufferOffset;
+            float4 uv = float4(v.texcoord.xy + _BufferOffset, 0, 0);
 
-            float4 p = tex2D(_PositionTex, uv);
-            float4 r = tex2D(_RotationTex, uv);
+            float4 p = tex2Dlod(_PositionTex, uv);
+            float4 r = tex2Dlod(_RotationTex, uv);
             float4 q = normalize_quaternion(r);
             float s = calc_scale(r.w, p.w);
 
