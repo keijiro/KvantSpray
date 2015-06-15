@@ -2,14 +2,14 @@
 // Common parts of Spray shaders
 //
 
+sampler2D _PositionBuffer;
+sampler2D _RotationBuffer;
 
-sampler2D _PositionTex;
-sampler2D _RotationTex;
-
+half _ColorMode;
 half4 _Color;
 half4 _Color2;
-half2 _PbrParams;
-float2 _ScaleParams;
+float _ScaleMin;
+float _ScaleMax;
 float2 _BufferOffset;
 
 // PRNG function.
@@ -46,7 +46,7 @@ float4 normalize_quaternion(float4 q)
 // Calculate a scaling value.
 float calc_scale(float scale01, float time01)
 {
-    float s = lerp(_ScaleParams.x, _ScaleParams.y, scale01);
+    float s = lerp(_ScaleMin, _ScaleMax, scale01);
     // Linear scaling animation with life.
     // (0, 0) -> (0.1, 1) -> (0.9, 1) -> (1, 0)
     return s * min(1.0, 5.0 - abs(5.0 - time01 * 10));
@@ -55,11 +55,9 @@ float calc_scale(float scale01, float time01)
 // Calculate a color.
 float4 calc_color(float2 uv, float time01)
 {
-#ifdef COLOR_ANIMATE
-    return lerp(_Color2, _Color, time01);
-#elif COLOR_RANDOM
-    return lerp(_Color2, _Color, nrand(uv));
+#if COLOR_RANDOM
+    return lerp(_Color, _Color2, nrand(uv));
 #else
-    return _Color;
+    return lerp(_Color, _Color2, (1.0 - time01) * _ColorMode);
 #endif
 }

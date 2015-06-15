@@ -11,17 +11,23 @@
 // _RotationTex.xyz = particle rotation
 // _RotstionTex.w   = scale factor
 //
-Shader "Hidden/Kvant/Spray/Opaque PBR"
+Shader "Kvant/Spray/Opaque PBR"
 {
     Properties
     {
-        _PositionTex  ("-", 2D)     = ""{}
-        _RotationTex  ("-", 2D)     = ""{}
-        _Color        ("-", Color)  = (1, 1, 1, 1)
-        _Color2       ("-", Color)  = (1, 1, 1, 1)
-        _PbrParams    ("-", Vector) = (0.5, 0.5, 0, 0) // (metalness, smoothness)
-        _ScaleParams  ("-", Vector) = (1, 1, 0, 0)     // (min scale, max scale)
-        _BufferOffset ("-", Vector) = (0, 0, 0, 0)
+        _PositionBuffer ("-", 2D) = "black"{}
+        _RotationBuffer ("-", 2D) = "red"{}
+
+        [KeywordEnum(Single, Animate, Random)]
+        _ColorMode ("-", Float) = 0
+        _Color     ("-", Color) = (1, 1, 1, 1)
+        _Color2    ("-", Color) = (0.5, 0.5, 0.5, 1)
+
+        _Metallic   ("-", Range(0,1)) = 0.5
+        _Smoothness ("-", Range(0,1)) = 0.5
+
+        _ScaleMin ("-", Float) = 1
+        _ScaleMax ("-", Float) = 1
     }
     SubShader
     {
@@ -29,13 +35,14 @@ Shader "Hidden/Kvant/Spray/Opaque PBR"
 
         CGPROGRAM
 
-        #pragma multi_compile COLOR_SINGLE COLOR_ANIMATE COLOR_RANDOM
-
+        #pragma surface surf Standard vertex:vert nolightmap addshadow
+        #pragma shader_feature COLORMODE_RANDOM
         #pragma target 3.0
 
-        #pragma surface surf Standard vertex:vert nolightmap addshadow
-
         #include "Common.cginc"
+
+        half _Metallic;
+        half _Smoothness;
 
         struct Input
         {
@@ -46,8 +53,9 @@ Shader "Hidden/Kvant/Spray/Opaque PBR"
         {
             float4 uv = float4(v.texcoord.xy + _BufferOffset, 0, 0);
 
-            float4 p = tex2Dlod(_PositionTex, uv);
-            float4 r = tex2Dlod(_RotationTex, uv);
+            float4 p = tex2Dlod(_PositionBuffer, uv);
+            float4 r = tex2Dlod(_RotationBuffer, uv);
+
             float4 q = normalize_quaternion(r);
             float s = calc_scale(r.w, p.w);
 
@@ -59,11 +67,11 @@ Shader "Hidden/Kvant/Spray/Opaque PBR"
         void surf(Input IN, inout SurfaceOutputStandard o)
         {
             o.Albedo = IN.color.rgb;
-            o.Metallic = _PbrParams.x;
-            o.Smoothness = _PbrParams.y;
-            o.Alpha = IN.color.a;
+            o.Metallic = _Metallic;
+            o.Smoothness = _Smoothness;
         }
 
         ENDCG
     }
+    CustomEditor "Kvant.SpraySurfaceMaterialEditor"
 }
