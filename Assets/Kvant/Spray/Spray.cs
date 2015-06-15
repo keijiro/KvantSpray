@@ -6,55 +6,154 @@ using UnityEngine.Rendering;
 
 namespace Kvant
 {
-    [ExecuteInEditMode, AddComponentMenu("Kvant/Spray")]
+    [ExecuteInEditMode]
+    [AddComponentMenu("Kvant/Spray")]
     public partial class Spray : MonoBehaviour
     {
-        #region Parameters Exposed To Editor
+        #region Basic Properties
 
         [SerializeField]
         int _maxParticles = 1000;
 
+        public int maxParticles {
+            get {
+                // Returns actual number of particles.
+                if (_bulkMesh == null) return 0;
+                return (_maxParticles / _bulkMesh.copyCount + 1) * _bulkMesh.copyCount;
+            }
+        }
+
+        #endregion
+
+        #region Emitter Settings
+
         [SerializeField]
         Vector3 _emitterCenter = Vector3.zero;
+
+        public Vector3 emitterCenter {
+            get { return _emitterCenter; }
+            set { _emitterCenter = value; }
+        }
 
         [SerializeField]
         Vector3 _emitterSize = Vector3.one;
 
+        public Vector3 emitterSize {
+            get { return _emitterSize; }
+            set { _emitterSize = value; }
+        }
+
         [SerializeField, Range(0, 1)]
         float _throttle = 1.0f;
+
+        public float throttle {
+            get { return _throttle; }
+            set { _throttle = value; }
+        }
+
+        #endregion
+
+        #region Life Parameters
 
         [SerializeField]
         float _minLife = 1.0f;
 
+        public float minLife {
+            get { return _minLife; }
+            set { _minLife = value; }
+        }
+
         [SerializeField]
         float _maxLife = 4.0f;
+
+        public float maxLife {
+            get { return _maxLife; }
+            set { _maxLife = value; }
+        }
+
+        #endregion
+
+        #region Velocity Parameters
 
         [SerializeField]
         float _minSpeed = 2.0f;
 
+        public float minSpeed {
+            get { return _minSpeed; }
+            set { _minSpeed = value; }
+        }
+
         [SerializeField]
         float _maxSpeed = 10.0f;
+
+        public float maxSpeed {
+            get { return _maxSpeed; }
+            set { _maxSpeed = value; }
+        }
 
         [SerializeField]
         Vector3 _direction = Vector3.forward;
 
+        public Vector3 direction {
+            get { return _direction; }
+            set { _direction = value; }
+        }
+
         [SerializeField, Range(0, 1)]
         float _spread = 0.2f;
+
+        public float spread {
+            get { return _spread; }
+            set { _spread = value; }
+        }
 
         [SerializeField]
         float _minSpin = 30.0f;
 
+        public float minSpin {
+            get { return _minSpin; }
+            set { _minSpin = value; }
+        }
+
         [SerializeField]
         float _maxSpin = 200.0f;
+
+        public float maxSpin {
+            get { return _maxSpin; }
+            set { _maxSpin = value; }
+        }
+
+        #endregion
+
+        #region Noise Parameters
 
         [SerializeField]
         float _noiseAmplitude = 5.0f;
 
+        public float noiseAmplitude {
+            get { return _noiseAmplitude; }
+            set { _noiseAmplitude = value; }
+        }
+
         [SerializeField]
         float _noiseFrequency = 0.2f;
 
+        public float noiseFrequency {
+            get { return _noiseFrequency; }
+            set { _noiseFrequency = value; }
+        }
+
         [SerializeField]
         float _noiseSpeed = 1.0f;
+
+        public float noiseSpeed {
+            get { return _noiseSpeed; }
+            set { _noiseSpeed = value; }
+        }
+
+        #endregion
+
+        #region Render Settings
 
         [SerializeField]
         Mesh[] _shapes = new Mesh[1];
@@ -62,164 +161,83 @@ namespace Kvant
         [SerializeField]
         float _minScale = 0.1f;
 
-        [SerializeField]
-        float _maxScale = 1.2f;
-
-        [SerializeField]
-        Material _material;
-
-        [SerializeField]
-        ShadowCastingMode _castShadows;
-
-        [SerializeField]
-        bool _receiveShadows = false;
-
-        [SerializeField]
-        int _randomSeed = 0;
-
-        [SerializeField]
-        bool _debug;
-
-        #endregion
-
-        #region Public Properties
-
-        public int maxParticles {
-            get {
-                // Returns the actual number of particles.
-                if (_bulkMesh == null) return 0;
-                return (_maxParticles / _bulkMesh.copyCount + 1) * _bulkMesh.copyCount;
-            }
-        }
-
-        public Vector3 emitterCenter {
-            get { return _emitterCenter; }
-            set { _emitterCenter = value; }
-        }
-
-        public Vector3 emitterSize {
-            get { return _emitterSize; }
-            set { _emitterSize = value; }
-        }
-
-        public float throttle {
-            get { return _throttle; }
-            set { _throttle = value; }
-        }
-
-        public float minLife {
-            get { return _minLife; }
-            set { _minLife = value; }
-        }
-
-        public float maxLife {
-            get { return _maxLife; }
-            set { _maxLife = value; }
-        }
-
-        public float minSpeed {
-            get { return _minSpeed; }
-            set { _minSpeed = value; }
-        }
-
-        public float maxSpeed {
-            get { return _maxSpeed; }
-            set { _maxSpeed = value; }
-        }
-
-        public Vector3 direction {
-            get { return _direction; }
-            set { _direction = value; }
-        }
-
-        public float spread {
-            get { return _spread; }
-            set { _spread = value; }
-        }
-
-        public float minSpin {
-            get { return _minSpin; }
-            set { _minSpin = value; }
-        }
-
-        public float maxSpin {
-            get { return _maxSpin; }
-            set { _maxSpin = value; }
-        }
-
-        public float noiseAmplitude {
-            get { return _noiseAmplitude; }
-            set { _noiseAmplitude = value; }
-        }
-
-        public float noiseFrequency {
-            get { return _noiseFrequency; }
-            set { _noiseFrequency = value; }
-        }
-
-        public float noiseSpeed {
-            get { return _noiseSpeed; }
-            set { _noiseSpeed = value; }
-        }
-
         public float minScale {
             get { return _minScale; }
             set { _minScale = value; }
         }
+
+        [SerializeField]
+        float _maxScale = 1.2f;
 
         public float maxScale {
             get { return _maxScale; }
             set { _maxScale = value; }
         }
 
+        [SerializeField]
+        Material _material;
+
         public Material material {
             get { return _material; }
             set { _material = value; }
         }
+
+        [SerializeField]
+        ShadowCastingMode _castShadows;
 
         public ShadowCastingMode shadowCastingMode {
             get { return _castShadows; }
             set { _castShadows = value; }
         }
 
+        [SerializeField]
+        bool _receiveShadows = false;
+
         public bool receiveShadows {
             get { return _receiveShadows; }
             set { _receiveShadows = value; }
         }
+
+        #endregion
+
+        #region Misc Settings
+
+        [SerializeField]
+        int _randomSeed = 0;
 
         public int randomSeed {
             get { return _randomSeed; }
             set { _randomSeed = value; }
         }
 
+        [SerializeField]
+        bool _debug;
+
         #endregion
 
-        #region Shader And Materials
+        #region Built-in Resources
 
+        [SerializeField] Material _defaultMaterial;
         [SerializeField] Shader _kernelShader;
         [SerializeField] Shader _debugShader;
 
-        Material _kernelMaterial;
-        Material _debugMaterial;
-
         #endregion
 
-        #region Private Variables And Objects
+        #region Private Variables And Properties
 
         RenderTexture _positionBuffer1;
         RenderTexture _positionBuffer2;
         RenderTexture _rotationBuffer1;
         RenderTexture _rotationBuffer2;
         BulkMesh _bulkMesh;
+        Material _kernelMaterial;
+        Material _debugMaterial;
         bool _needsReset = true;
-
-        #endregion
-
-        #region Private Properties
 
         static float deltaTime {
             get {
-                return Application.isPlaying && Time.frameCount > 1 ? Time.deltaTime : 1.0f / 10;
+                var isEditor = !Application.isPlaying || Time.frameCount < 2;
+                return isEditor ? 1.0f / 10 : Time.deltaTime;
             }
         }
 
@@ -274,13 +292,11 @@ namespace Kvant
 
         void ResetResources()
         {
-            // Mesh object.
             if (_bulkMesh == null)
                 _bulkMesh = new BulkMesh(_shapes);
             else
                 _bulkMesh.Rebuild(_shapes);
 
-            // Particle buffers.
             if (_positionBuffer1) DestroyImmediate(_positionBuffer1);
             if (_positionBuffer2) DestroyImmediate(_positionBuffer2);
             if (_rotationBuffer1) DestroyImmediate(_rotationBuffer1);
@@ -291,11 +307,10 @@ namespace Kvant
             _rotationBuffer1 = CreateBuffer();
             _rotationBuffer2 = CreateBuffer();
 
-            // Shader materials.
             if (!_kernelMaterial)  _kernelMaterial  = CreateMaterial(_kernelShader);
             if (!_debugMaterial)   _debugMaterial   = CreateMaterial(_debugShader);
 
-            // Warming up.
+            // Warming up
             UpdateKernelShader();
             InitializeAndPrewarmBuffers();
 
@@ -304,11 +319,10 @@ namespace Kvant
 
         void InitializeAndPrewarmBuffers()
         {
-            // Initialization.
             Graphics.Blit(null, _positionBuffer2, _kernelMaterial, 0);
             Graphics.Blit(null, _rotationBuffer2, _kernelMaterial, 1);
 
-            // Execute the kernel shader repeatedly.
+            // Call the update kernels repeatedly.
             for (var i = 0; i < 8; i++) {
                 Graphics.Blit(_positionBuffer2, _positionBuffer1, _kernelMaterial, 2);
                 Graphics.Blit(_rotationBuffer2, _rotationBuffer1, _kernelMaterial, 3);
@@ -354,7 +368,7 @@ namespace Kvant
                 _rotationBuffer1 = _rotationBuffer2;
                 _rotationBuffer2 = temp;
 
-                // Execute the kernel shader.
+                // Call the kernel shader.
                 Graphics.Blit(_positionBuffer1, _positionBuffer2, _kernelMaterial, 2);
                 Graphics.Blit(_rotationBuffer1, _rotationBuffer2, _kernelMaterial, 3);
             }
@@ -363,34 +377,48 @@ namespace Kvant
                 InitializeAndPrewarmBuffers();
             }
 
-            // Draw the bulk mesh.
-            var p = transform.position;
-            var r = transform.rotation;
+            // Make a material property block for the following drawcalls.
+            var props = new MaterialPropertyBlock();
+            props.SetTexture("_PositionBuffer", _positionBuffer2);
+            props.SetTexture("_RotationBuffer", _rotationBuffer2);
+            props.SetFloat("_ScaleMin", _minScale);
+            props.SetFloat("_ScaleMax", _maxScale);
+            props.SetFloat("_RandomSeed", _randomSeed);
+
+            // Temporary variables
+            var mesh = _bulkMesh.mesh;
+            var position = transform.position;
+            var rotation = transform.rotation;
+            var material = _material ? _material : _defaultMaterial;
             var uv = new Vector2(0.5f / _positionBuffer2.width, 0);
-            var offs = new MaterialPropertyBlock();
 
-            offs.SetTexture("_PositionBuffer", _positionBuffer2);
-            offs.SetTexture("_RotationBuffer", _rotationBuffer2);
-            offs.SetFloat("_ScaleMin", _minScale);
-            offs.SetFloat("_ScaleMax", _maxScale);
-            offs.SetFloat("_RandomSeed", _randomSeed);
-
+            // Draw a bulk mesh repeatedly.
             for (var i = 0; i < _positionBuffer2.height; i++)
             {
                 uv.y = (0.5f + i) / _positionBuffer2.height;
-                offs.AddVector("_BufferOffset", uv);
-                Graphics.DrawMesh(_bulkMesh.mesh, p, r, _material, 0, null, 0, offs, _castShadows, _receiveShadows);
+                props.AddVector("_BufferOffset", uv);
+                Graphics.DrawMesh(
+                    mesh, position, rotation,
+                    material, 0, null, 0, props,
+                    _castShadows, _receiveShadows);
             }
         }
 
         void OnGUI()
         {
-            if (_debug && Event.current.type.Equals(EventType.Repaint) && _debugMaterial)
+            if (_debug && Event.current.type.Equals(EventType.Repaint))
             {
-                var r1 = new Rect(0, 0, 256, 64);
-                var r2 = new Rect(0, 64, 256, 64);
-                if (_positionBuffer1) Graphics.DrawTexture(r1, _positionBuffer2, _debugMaterial);
-                if (_rotationBuffer1) Graphics.DrawTexture(r2, _rotationBuffer2, _debugMaterial);
+                if (_debugMaterial && _positionBuffer2 && _rotationBuffer2)
+                {
+                    var w = _positionBuffer2.width;
+                    var h = _positionBuffer2.height;
+
+                    var rect = new Rect(0, 0, w, h);
+                    Graphics.DrawTexture(rect, _positionBuffer2, _debugMaterial);
+
+                    rect.y += h;
+                    Graphics.DrawTexture(rect, _rotationBuffer2, _debugMaterial);
+                }
             }
         }
 

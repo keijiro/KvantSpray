@@ -6,7 +6,8 @@ using UnityEditor;
 
 namespace Kvant
 {
-    [CustomEditor(typeof(Spray)), CanEditMultipleObjects]
+    [CanEditMultipleObjects]
+    [CustomEditor(typeof(Spray))]
     public class SprayEditor : Editor
     {
         SerializedProperty _maxParticles;
