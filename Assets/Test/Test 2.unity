@@ -291,15 +291,15 @@ MonoBehaviour:
   _throttle: 0
   _minLife: .976504624
   _maxLife: 3.15855169
-  _direction: {x: 0, y: 0, z: 1}
-  _spread: 1
   _minSpeed: 0
   _maxSpeed: .464451015
+  _direction: {x: 0, y: 0, z: 1}
+  _spread: 1
   _minSpin: 312.5
   _maxSpin: 709.0625
-  _noiseFrequency: .300000012
   _noiseAmplitude: 2.79999995
-  _noiseAnimation: 1.29999995
+  _noiseFrequency: .300000012
+  _noiseSpeed: 1
   _shapes:
   - {fileID: 4300014, guid: a8e303374d34f4235b1c7b5580f73486, type: 3}
   - {fileID: 4300000, guid: a8e303374d34f4235b1c7b5580f73486, type: 3}
@@ -307,20 +307,13 @@ MonoBehaviour:
   - {fileID: 4300004, guid: a8e303374d34f4235b1c7b5580f73486, type: 3}
   _minScale: .0393529385
   _maxScale: .175336719
-  _shadingMode: 0
-  _metallic: .841000021
-  _smoothness: .514999986
+  _material: {fileID: 2100000, guid: 6c4722bd9c0804f26a5414bb094d530f, type: 2}
   _castShadows: 1
   _receiveShadows: 0
-  _colorMode: 1
-  _color: {r: 1, g: 1, b: 1, a: 1}
-  _color2: {r: .279411793, g: .135596901, b: .135596901, a: 1}
   _randomSeed: 32
   _debug: 0
+  _defaultMaterial: {fileID: 0}
   _kernelShader: {fileID: 4800000, guid: 5e5e161a3708e40119404232637809fc, type: 3}
-  _opaqueShader: {fileID: 4800000, guid: 8e1247c2208bf4bef82f45b4c36f0600, type: 3}
-  _transparentShader: {fileID: 4800000, guid: 842571bad42f44eeb9307b8d6177275d, type: 3}
-  _unlitShader: {fileID: 4800000, guid: fc11471c70ec2478f80b9434bf45d6c1, type: 3}
   _debugShader: {fileID: 4800000, guid: ad2397ccf551046ecb4df814f027d430, type: 3}
 --- !u!4 &1444205598
 Transform:
@@ -539,15 +532,15 @@ MonoBehaviour:
   _throttle: 0
   _minLife: .976504624
   _maxLife: 3.15855169
-  _direction: {x: 0, y: 0, z: 1}
-  _spread: 1
   _minSpeed: 0
   _maxSpeed: .464451015
+  _direction: {x: 0, y: 0, z: 1}
+  _spread: 1
   _minSpin: 312.5
   _maxSpin: 709.0625
-  _noiseFrequency: .300000012
   _noiseAmplitude: 2.79999995
-  _noiseAnimation: 1.29999995
+  _noiseFrequency: .300000012
+  _noiseSpeed: 1
   _shapes:
   - {fileID: 4300014, guid: a8e303374d34f4235b1c7b5580f73486, type: 3}
   - {fileID: 4300000, guid: a8e303374d34f4235b1c7b5580f73486, type: 3}
@@ -555,20 +548,13 @@ MonoBehaviour:
   - {fileID: 4300004, guid: a8e303374d34f4235b1c7b5580f73486, type: 3}
   _minScale: .0393529385
   _maxScale: .175336719
-  _shadingMode: 0
-  _metallic: .841000021
-  _smoothness: .514999986
+  _material: {fileID: 2100000, guid: 6c4722bd9c0804f26a5414bb094d530f, type: 2}
   _castShadows: 1
   _receiveShadows: 0
-  _colorMode: 1
-  _color: {r: 1, g: 0, b: 0, a: 1}
-  _color2: {r: .279411793, g: .135596901, b: .135596901, a: 1}
   _randomSeed: 10
   _debug: 0
+  _defaultMaterial: {fileID: 0}
   _kernelShader: {fileID: 4800000, guid: 5e5e161a3708e40119404232637809fc, type: 3}
-  _opaqueShader: {fileID: 4800000, guid: 8e1247c2208bf4bef82f45b4c36f0600, type: 3}
-  _transparentShader: {fileID: 4800000, guid: 842571bad42f44eeb9307b8d6177275d, type: 3}
-  _unlitShader: {fileID: 4800000, guid: fc11471c70ec2478f80b9434bf45d6c1, type: 3}
   _debugShader: {fileID: 4800000, guid: ad2397ccf551046ecb4df814f027d430, type: 3}
 --- !u!4 &1870839674
 Transform:
