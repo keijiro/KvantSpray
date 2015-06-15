@@ -3,25 +3,34 @@
 //
 // Vertex format:
 // position.xyz = vertex position
-// texcoord.xy  = uv for PositionTex/RotationTex
+// texcoord.xy  = uv for GPGPU buffers
 //
-// Texture format:
-// _PositionTex.xyz = particle position
-// _PositionTex.w   = life
-// _RotationTex.xyz = particle rotation
-// _RotstionTex.w   = scale factor
+// Texture format in position kernels:
+// .xyz = particle position
+// .w   = life
 //
-Shader "Hidden/Kvant/Spray/Opaque PBR"
+// Texture format in rotation kernels:
+// .xyzw = particle rotation
+//
+Shader "Kvant/Spray/Opaque PBR"
 {
     Properties
     {
-        _PositionTex  ("-", 2D)     = ""{}
-        _RotationTex  ("-", 2D)     = ""{}
-        _Color        ("-", Color)  = (1, 1, 1, 1)
-        _Color2       ("-", Color)  = (1, 1, 1, 1)
-        _PbrParams    ("-", Vector) = (0.5, 0.5, 0, 0) // (metalness, smoothness)
-        _ScaleParams  ("-", Vector) = (1, 1, 0, 0)     // (min scale, max scale)
-        _BufferOffset ("-", Vector) = (0, 0, 0, 0)
+        _PositionBuffer ("-", 2D) = "black"{}
+        _RotationBuffer ("-", 2D) = "red"{}
+
+        [KeywordEnum(Single, Animate, Random)]
+        _ColorMode ("-", Float) = 0
+        _Color     ("-", Color) = (1, 1, 1, 1)
+        _Color2    ("-", Color) = (0.5, 0.5, 0.5, 1)
+
+        _Metallic   ("-", Range(0,1)) = 0.5
+        _Smoothness ("-", Range(0,1)) = 0.5
+
+        _ScaleMin ("-", Float) = 1
+        _ScaleMax ("-", Float) = 1
+
+        _RandomSeed ("-", Float) = 0
     }
     SubShader
     {
@@ -29,13 +38,14 @@ Shader "Hidden/Kvant/Spray/Opaque PBR"
 
         CGPROGRAM
 
-        #pragma multi_compile COLOR_SINGLE COLOR_ANIMATE COLOR_RANDOM
-
+        #pragma surface surf Standard vertex:vert nolightmap addshadow
+        #pragma shader_feature _COLORMODE_RANDOM
         #pragma target 3.0
 
-        #pragma surface surf Standard vertex:vert nolightmap addshadow
-
         #include "Common.cginc"
+
+        half _Metallic;
+        half _Smoothness;
 
         struct Input
         {
@@ -46,24 +56,25 @@ Shader "Hidden/Kvant/Spray/Opaque PBR"
         {
             float4 uv = float4(v.texcoord.xy + _BufferOffset, 0, 0);
 
-            float4 p = tex2Dlod(_PositionTex, uv);
-            float4 r = tex2Dlod(_RotationTex, uv);
-            float4 q = normalize_quaternion(r);
-            float s = calc_scale(r.w, p.w);
+            float4 p = tex2Dlod(_PositionBuffer, uv);
+            float4 r = tex2Dlod(_RotationBuffer, uv);
 
-            v.vertex.xyz = rotate_vector(v.vertex.xyz, q) * s + p.xyz;
-            v.normal = rotate_vector(v.normal, q);
-            v.color = calc_color(uv, p.w);
+            float l = p.w + 0.5;
+            float s = calc_scale(uv, l);
+
+            v.vertex.xyz = rotate_vector(v.vertex.xyz, r) * s + p.xyz;
+            v.normal = rotate_vector(v.normal, r);
+            v.color = calc_color(uv, l);
         }
 
         void surf(Input IN, inout SurfaceOutputStandard o)
         {
             o.Albedo = IN.color.rgb;
-            o.Metallic = _PbrParams.x;
-            o.Smoothness = _PbrParams.y;
-            o.Alpha = IN.color.a;
+            o.Metallic = _Metallic;
+            o.Smoothness = _Smoothness;
         }
 
         ENDCG
     }
+    CustomEditor "Kvant.SpraySurfaceMaterialEditor"
 }

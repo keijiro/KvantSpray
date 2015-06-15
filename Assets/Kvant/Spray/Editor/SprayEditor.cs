@@ -6,7 +6,8 @@ using UnityEditor;
 
 namespace Kvant
 {
-    [CustomEditor(typeof(Spray)), CanEditMultipleObjects]
+    [CanEditMultipleObjects]
+    [CustomEditor(typeof(Spray))]
     public class SprayEditor : Editor
     {
         SerializedProperty _maxParticles;
@@ -24,23 +25,16 @@ namespace Kvant
         SerializedProperty _minSpin;
         SerializedProperty _maxSpin;
 
-        SerializedProperty _noiseFrequency;
         SerializedProperty _noiseAmplitude;
-        SerializedProperty _noiseAnimation;
+        SerializedProperty _noiseFrequency;
+        SerializedProperty _noiseSpeed;
 
         SerializedProperty _shapes;
         SerializedProperty _minScale;
         SerializedProperty _maxScale;
-
-        SerializedProperty _shadingMode;
-        SerializedProperty _metallic;
-        SerializedProperty _smoothness;
+        SerializedProperty _material;
         SerializedProperty _castShadows;
         SerializedProperty _receiveShadows;
-
-        SerializedProperty _colorMode;
-        SerializedProperty _color;
-        SerializedProperty _color2;
 
         SerializedProperty _randomSeed;
         SerializedProperty _debug;
@@ -50,12 +44,9 @@ namespace Kvant
         static GUIContent _textLife      = new GUIContent("Life");
         static GUIContent _textSpeed     = new GUIContent("Speed");
         static GUIContent _textSpin      = new GUIContent("Spin");
-        static GUIContent _textFrequency = new GUIContent("Frequency");
         static GUIContent _textAmplitude = new GUIContent("Amplitude");
-        static GUIContent _textAnimation = new GUIContent("Animation");
+        static GUIContent _textFrequency = new GUIContent("Frequency");
         static GUIContent _textScale     = new GUIContent("Scale");
-        static GUIContent _textNull      = new GUIContent("");
-        static GUIContent _textEmpty     = new GUIContent(" ");
 
         void OnEnable()
         {
@@ -74,23 +65,16 @@ namespace Kvant
             _minSpin   = serializedObject.FindProperty("_minSpin");
             _maxSpin   = serializedObject.FindProperty("_maxSpin");
 
-            _noiseFrequency = serializedObject.FindProperty("_noiseFrequency");
             _noiseAmplitude = serializedObject.FindProperty("_noiseAmplitude");
-            _noiseAnimation = serializedObject.FindProperty("_noiseAnimation");
+            _noiseFrequency = serializedObject.FindProperty("_noiseFrequency");
+            _noiseSpeed     = serializedObject.FindProperty("_noiseSpeed");
 
-            _shapes   = serializedObject.FindProperty("_shapes");
-            _minScale = serializedObject.FindProperty("_minScale");
-            _maxScale = serializedObject.FindProperty("_maxScale");
-
-            _shadingMode    = serializedObject.FindProperty("_shadingMode");
-            _metallic       = serializedObject.FindProperty("_metallic");
-            _smoothness     = serializedObject.FindProperty("_smoothness");
+            _shapes         = serializedObject.FindProperty("_shapes");
+            _minScale       = serializedObject.FindProperty("_minScale");
+            _maxScale       = serializedObject.FindProperty("_maxScale");
+            _material       = serializedObject.FindProperty("_material");
             _castShadows    = serializedObject.FindProperty("_castShadows");
             _receiveShadows = serializedObject.FindProperty("_receiveShadows");
-
-            _colorMode = serializedObject.FindProperty("_colorMode");
-            _color     = serializedObject.FindProperty("_color");
-            _color2    = serializedObject.FindProperty("_color2");
 
             _randomSeed = serializedObject.FindProperty("_randomSeed");
             _debug      = serializedObject.FindProperty("_debug");
@@ -105,18 +89,18 @@ namespace Kvant
             EditorGUI.BeginChangeCheck();
 
             EditorGUILayout.PropertyField(_maxParticles);
-            if (!_maxParticles.hasMultipleDifferentValues)
-                EditorGUILayout.LabelField(" ", "Allocated: " + targetSpray.maxParticles, EditorStyles.miniLabel);
+            if (!_maxParticles.hasMultipleDifferentValues) {
+                var note = "Allocated: " + targetSpray.maxParticles;
+                EditorGUILayout.LabelField(" ", note, EditorStyles.miniLabel);
+            }
 
             if (EditorGUI.EndChangeCheck())
                 targetSpray.NotifyConfigChange();
 
             EditorGUILayout.LabelField("Emitter", EditorStyles.boldLabel);
-            EditorGUI.indentLevel++;
             EditorGUILayout.PropertyField(_emitterCenter, _textCenter);
             EditorGUILayout.PropertyField(_emitterSize, _textSize);
             EditorGUILayout.PropertyField(_throttle);
-            EditorGUI.indentLevel--;
 
             EditorGUILayout.Space();
 
@@ -125,21 +109,17 @@ namespace Kvant
             EditorGUILayout.Space();
 
             EditorGUILayout.LabelField("Velocity", EditorStyles.boldLabel);
-            EditorGUI.indentLevel++;
             MinMaxSlider(_textSpeed, _minSpeed, _maxSpeed, 0.0f, 30.0f);
             EditorGUILayout.PropertyField(_direction);
             EditorGUILayout.PropertyField(_spread);
             MinMaxSlider(_textSpin, _minSpin, _maxSpin, 0.0f, 1000.0f);
-            EditorGUI.indentLevel--;
 
             EditorGUILayout.Space();
 
             EditorGUILayout.LabelField("Turbulent Noise", EditorStyles.boldLabel);
-            EditorGUI.indentLevel++;
-            EditorGUILayout.Slider(_noiseFrequency, 0.01f, 1.0f, _textFrequency);
             EditorGUILayout.Slider(_noiseAmplitude, 0.0f, 20.0f, _textAmplitude);
-            EditorGUILayout.Slider(_noiseAnimation, 0.0f, 10.0f, _textAnimation);
-            EditorGUI.indentLevel--;
+            EditorGUILayout.Slider(_noiseFrequency, 0.01f, 1.0f, _textFrequency);
+            EditorGUILayout.Slider(_noiseSpeed, 0.0f, 10.0f, _textSpeed);
 
             EditorGUILayout.Space();
 
@@ -150,38 +130,11 @@ namespace Kvant
             if (EditorGUI.EndChangeCheck())
                 targetSpray.NotifyConfigChange();
 
-            EditorGUILayout.Space();
-
             MinMaxSlider(_textScale, _minScale, _maxScale, 0.01f, 2.0f);
 
-            EditorGUILayout.Space();
-
-            EditorGUILayout.PropertyField(_shadingMode);
-            if (_shadingMode.hasMultipleDifferentValues || _shadingMode.enumValueIndex < 2)
-            {
-                EditorGUI.indentLevel++;
-                EditorGUILayout.PropertyField(_metallic);
-                EditorGUILayout.PropertyField(_smoothness);
-                EditorGUILayout.PropertyField(_castShadows);
-                EditorGUILayout.PropertyField(_receiveShadows);
-                EditorGUI.indentLevel--;
-            }
-
-            EditorGUILayout.Space();
-
-            EditorGUILayout.PropertyField(_colorMode);
-            if (_colorMode.hasMultipleDifferentValues || _colorMode.enumValueIndex != 0)
-            {
-                EditorGUILayout.BeginHorizontal();
-                EditorGUILayout.PrefixLabel(_textEmpty);
-                EditorGUILayout.PropertyField(_color, _textNull);
-                EditorGUILayout.PropertyField(_color2, _textNull);
-                EditorGUILayout.EndHorizontal();
-            }
-            else
-            {
-                EditorGUILayout.PropertyField(_color, _textEmpty);
-            }
+            EditorGUILayout.PropertyField(_material);
+            EditorGUILayout.PropertyField(_castShadows);
+            EditorGUILayout.PropertyField(_receiveShadows);
 
             EditorGUILayout.Space();
 
