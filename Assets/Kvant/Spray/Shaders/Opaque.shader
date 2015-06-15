@@ -3,13 +3,14 @@
 //
 // Vertex format:
 // position.xyz = vertex position
-// texcoord.xy  = uv for PositionTex/RotationTex
+// texcoord.xy  = uv for GPGPU buffers
 //
-// Texture format:
-// _PositionTex.xyz = particle position
-// _PositionTex.w   = life
-// _RotationTex.xyz = particle rotation
-// _RotstionTex.w   = scale factor
+// Texture format in position kernels:
+// .xyz = particle position
+// .w   = life
+//
+// Texture format in rotation kernels:
+// .xyzw = particle rotation
 //
 Shader "Kvant/Spray/Opaque PBR"
 {
@@ -28,6 +29,8 @@ Shader "Kvant/Spray/Opaque PBR"
 
         _ScaleMin ("-", Float) = 1
         _ScaleMax ("-", Float) = 1
+
+        _RandomSeed ("-", Float) = 0
     }
     SubShader
     {
@@ -36,7 +39,7 @@ Shader "Kvant/Spray/Opaque PBR"
         CGPROGRAM
 
         #pragma surface surf Standard vertex:vert nolightmap addshadow
-        #pragma shader_feature COLORMODE_RANDOM
+        #pragma shader_feature _COLORMODE_RANDOM
         #pragma target 3.0
 
         #include "Common.cginc"
@@ -56,12 +59,12 @@ Shader "Kvant/Spray/Opaque PBR"
             float4 p = tex2Dlod(_PositionBuffer, uv);
             float4 r = tex2Dlod(_RotationBuffer, uv);
 
-            float4 q = normalize_quaternion(r);
-            float s = calc_scale(r.w, p.w);
+            float l = p.w + 0.5;
+            float s = calc_scale(uv, l);
 
-            v.vertex.xyz = rotate_vector(v.vertex.xyz, q) * s + p.xyz;
-            v.normal = rotate_vector(v.normal, q);
-            v.color = calc_color(uv, p.w);
+            v.vertex.xyz = rotate_vector(v.vertex.xyz, r) * s + p.xyz;
+            v.normal = rotate_vector(v.normal, r);
+            v.color = calc_color(uv, l);
         }
 
         void surf(Input IN, inout SurfaceOutputStandard o)

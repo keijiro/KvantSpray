@@ -3,13 +3,14 @@
 //
 // Vertex format:
 // position.xyz = vertex position
-// texcoord.xy  = uv for PositionTex/RotationTex
+// texcoord.xy  = uv for GPGPU buffers
 //
-// Texture format:
-// _PositionTex.xyz = particle position
-// _PositionTex.w   = life
-// _RotationTex.xyz = particle rotation
-// _RotstionTex.w   = scale factor
+// Texture format in position kernels:
+// .xyz = particle position
+// .w   = life
+//
+// Texture format in rotation kernels:
+// .xyzw = particle rotation
 //
 Shader "Kvant/Spray/Transparent Unlit"
 {
@@ -28,12 +29,13 @@ Shader "Kvant/Spray/Transparent Unlit"
 
         _ScaleMin ("-", Float) = 1
         _ScaleMax ("-", Float) = 1
+
+        _RandomSeed ("-", Float) = 0
     }
 
     CGINCLUDE
 
-    #pragma shader_feature COLORMODE_RANDOM
-
+    #pragma shader_feature _COLORMODE_RANDOM
     #pragma multi_compile_fog
 
     #include "UnityCG.cginc"
@@ -61,15 +63,15 @@ Shader "Kvant/Spray/Transparent Unlit"
         float4 p = tex2Dlod(_PositionBuffer, uv);
         float4 r = tex2Dlod(_RotationBuffer, uv);
 
-        float4 q = normalize_quaternion(r);
-        float s = calc_scale(r.w, p.w);
+        float l = p.w + 0.5;
+        float s = calc_scale(uv, l);
 
-        v.vertex.xyz = rotate_vector(v.vertex.xyz, q) * s + p.xyz;
+        v.vertex.xyz = rotate_vector(v.vertex.xyz, r) * s + p.xyz;
 
         v2f o;
 
         o.position = mul(UNITY_MATRIX_MVP, v.vertex);
-        o.color = calc_color(uv, p.w);
+        o.color = calc_color(uv, l);
 
         UNITY_TRANSFER_FOG(o, o.position);
 
@@ -80,8 +82,7 @@ Shader "Kvant/Spray/Transparent Unlit"
     {
         half4 c = i.color;
         UNITY_APPLY_FOG_COLOR(i.fogCoord, c, (half4)0);
-        c.rgb *= c.a;
-        c.a *= _BlendMode;
+        c *= float4(c.aaa, _BlendMode);
         return c;
     }
 

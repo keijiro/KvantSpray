@@ -373,6 +373,7 @@ namespace Kvant
             offs.SetTexture("_RotationBuffer", _rotationBuffer2);
             offs.SetFloat("_ScaleMin", _minScale);
             offs.SetFloat("_ScaleMax", _maxScale);
+            offs.SetFloat("_RandomSeed", _randomSeed);
 
             for (var i = 0; i < _positionBuffer2.height; i++)
             {
