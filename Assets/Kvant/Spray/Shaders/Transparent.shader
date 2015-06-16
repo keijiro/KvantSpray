@@ -27,6 +27,12 @@ Shader "Kvant/Spray/Transparent PBR"
         _Metallic   ("-", Range(0,1)) = 0.5
         _Smoothness ("-", Range(0,1)) = 0.5
 
+        _MainTex      ("-", 2D) = "white"{}
+        _NormalMap    ("-", 2D) = "bump"{}
+        _NormalScale  ("-", Range(0,2)) = 1
+        _OcclusionMap ("-", 2D) = "white"{}
+        _OcclusionStr ("-", Range(0,1)) = 1
+
         _ScaleMin ("-", Float) = 1
         _ScaleMax ("-", Float) = 1
 
@@ -40,6 +46,9 @@ Shader "Kvant/Spray/Transparent PBR"
 
         #pragma surface surf Standard vertex:vert nolightmap noshadow alpha:fade
         #pragma shader_feature _COLORMODE_RANDOM
+        #pragma shader_feature _ALBEDOMAP
+        #pragma shader_feature _NORMALMAP
+        #pragma shader_feature _OCCLUSIONMAP
         #pragma target 3.0
 
         #include "Common.cginc"
@@ -47,14 +56,21 @@ Shader "Kvant/Spray/Transparent PBR"
         half _Metallic;
         half _Smoothness;
 
+        sampler2D _MainTex;
+        sampler2D _NormalMap;
+        half _NormalScale;
+        sampler2D _OcclusionMap;
+        half _OcclusionStr;
+
         struct Input
         {
+            float2 uv_MainTex;
             half4 color : COLOR;
         };
 
         void vert(inout appdata_full v)
         {
-            float4 uv = float4(v.texcoord.xy + _BufferOffset, 0, 0);
+            float4 uv = float4(v.texcoord1.xy + _BufferOffset, 0, 0);
 
             float4 p = tex2Dlod(_PositionBuffer, uv);
             float4 r = tex2Dlod(_RotationBuffer, uv);
@@ -64,13 +80,33 @@ Shader "Kvant/Spray/Transparent PBR"
 
             v.vertex.xyz = rotate_vector(v.vertex.xyz, r) * s + p.xyz;
             v.normal = rotate_vector(v.normal, r);
+        #if _NORMALMAP
+            v.tangent.xyz = rotate_vector(v.tangent.xyz, r);
+        #endif
             v.color = calc_color(uv, l);
         }
 
         void surf(Input IN, inout SurfaceOutputStandard o)
         {
+        #if _ALBEDOMAP
+            half4 c = tex2D(_MainTex, IN.uv_MainTex);
+            o.Albedo = IN.color.rgb * c.rgb;
+            o.Alpha = IN.color.a * c.a;
+        #else
             o.Albedo = IN.color.rgb;
             o.Alpha = IN.color.a;
+        #endif
+
+        #if _NORMALMAP
+            half4 n = tex2D(_NormalMap, IN.uv_MainTex);
+            o.Normal = UnpackScaleNormal(n, _NormalScale);
+        #endif
+
+        #if _OCCLUSIONMAP
+            half4 occ = tex2D(_OcclusionMap, IN.uv_MainTex);
+            o.Occlusion = lerp((half4)1, occ, _OcclusionStr);
+        #endif
+
             o.Metallic = _Metallic;
             o.Smoothness = _Smoothness;
         }

@@ -12,6 +12,11 @@ namespace Kvant
         MaterialProperty _colorMode;
         MaterialProperty _color;
         MaterialProperty _color2;
+        MaterialProperty _mainTex;
+
+        static GUIContent _textureText = new GUIContent("Texture");
+
+        bool _initial = true;
 
         void FindProperties(MaterialProperty[] props)
         {
@@ -19,12 +24,18 @@ namespace Kvant
             _colorMode = FindProperty("_ColorMode", props);
             _color     = FindProperty("_Color", props);
             _color2    = FindProperty("_Color2", props);
+            _mainTex   = FindProperty("_MainTex", props);
         }
 
         public override void OnGUI(MaterialEditor materialEditor, MaterialProperty[] properties)
         {
             FindProperties(properties);
-            ShaderPropertiesGUI(materialEditor);
+
+            if (ShaderPropertiesGUI(materialEditor) || _initial)
+                foreach (Material m in materialEditor.targets)
+                    SetMaterialKeywords(m);
+
+            _initial = false;
         }
 
         bool ShaderPropertiesGUI(MaterialEditor materialEditor)
@@ -48,7 +59,22 @@ namespace Kvant
                 materialEditor.ShaderProperty(_color, " ");
             }
 
+            materialEditor.ShaderProperty(_mainTex, "Texture");
+
             return EditorGUI.EndChangeCheck();
+        }
+
+        static void SetMaterialKeywords(Material material)
+        {
+            SetKeyword(material, "_MAINTEX", material.GetTexture("_MainTex"));
+        }
+
+        static void SetKeyword(Material m, string keyword, bool state)
+        {
+            if (state)
+                m.EnableKeyword(keyword);
+            else
+                m.DisableKeyword(keyword);
         }
     }
 }
