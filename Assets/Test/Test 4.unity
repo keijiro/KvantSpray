@@ -25,7 +25,7 @@ RenderSettings:
   m_AmbientGroundColor: {r: .0469999984, g: .0430000015, b: .0350000001, a: 1}
   m_AmbientIntensity: 1
   m_AmbientMode: 0
-  m_SkyboxMaterial: {fileID: 2100000, guid: 59404cc7842c94258bd5b39428a1c73d, type: 2}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 114b350dad3c04f9298667339453d5a4, type: 2}
   m_HaloStrength: .5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -87,6 +87,66 @@ NavMeshSettings:
     cellSize: .166666672
     manualCellSize: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &974246415
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 974246418}
+  - 33: {fileID: 974246417}
+  - 23: {fileID: 974246416}
+  m_Layer: 0
+  m_Name: Cylinder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!23 &974246416
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 974246415}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_Materials:
+  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_UseLightProbes: 1
+  m_ReflectionProbeUsage: 1
+  m_ProbeAnchor: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 1
+  m_ImportantGI: 0
+  m_AutoUVMaxDistance: .5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+--- !u!33 &974246417
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 974246415}
+  m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &974246418
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 974246415}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.20000005, z: 0}
+  m_LocalScale: {x: 1, y: 1.20000005, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
 --- !u!1 &1187919843
 GameObject:
   m_ObjectHideFlags: 0
@@ -168,7 +228,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1392203991}
-  m_LocalRotation: {x: .0332842432, y: .300522655, z: -.0104944827, w: .953135967}
+  m_LocalRotation: {x: .00641980674, y: .98233664, z: -.0343039557, w: .183839202}
   m_LocalPosition: {x: 0, y: 2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -185,7 +245,7 @@ GameObject:
   - 4: {fileID: 1444205598}
   - 114: {fileID: 1444205597}
   m_Layer: 0
-  m_Name: Leaf Spray
+  m_Name: Confetti
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -202,31 +262,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 051131338091a4b3d861d193e64fb704, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxParticles: 12000
+  _maxParticles: 10000
   _emitterCenter: {x: 0, y: 0, z: 0}
-  _emitterSize: {x: 15, y: 15, z: 5}
+  _emitterSize: {x: 10, y: 4, z: 10}
   _throttle: 1
-  _minLife: 1
+  _minLife: 3
   _maxLife: 4
-  _minSpeed: 2
-  _maxSpeed: 10
-  _direction: {x: 0, y: 0, z: 1}
-  _spread: .200000003
+  _minSpeed: 1
+  _maxSpeed: 3
+  _direction: {x: 0, y: -1, z: 0}
+  _spread: .319999993
   _minSpin: 300
   _maxSpin: 600
-  _noiseAmplitude: 5
-  _noiseFrequency: .200000003
+  _noiseAmplitude: 1
+  _noiseFrequency: .600000024
   _noiseSpeed: 1
   _shapes:
-  - {fileID: 4300006, guid: 7977aa2e23a3b4949b0dec50b282bc9b, type: 3}
-  - {fileID: 4300004, guid: 7977aa2e23a3b4949b0dec50b282bc9b, type: 3}
-  - {fileID: 4300002, guid: 7977aa2e23a3b4949b0dec50b282bc9b, type: 3}
-  _minScale: .68697989
-  _maxScale: 1.38698006
-  _material: {fileID: 2100000, guid: 2d76ec8d28dba4137b0c407e0127dcc9, type: 2}
+  - {fileID: 4300004, guid: 2435b8e088489402c9a997107b5922e9, type: 3}
+  - {fileID: 4300002, guid: 2435b8e088489402c9a997107b5922e9, type: 3}
+  - {fileID: 4300006, guid: 2435b8e088489402c9a997107b5922e9, type: 3}
+  - {fileID: 4300000, guid: 2435b8e088489402c9a997107b5922e9, type: 3}
+  _minScale: 1
+  _maxScale: 1.35549545
+  _material: {fileID: 2100000, guid: c16d0e06a61984af0a49cf2ddf86ebf4, type: 2}
   _castShadows: 1
   _receiveShadows: 0
-  _randomSeed: 0
+  _randomSeed: 80
   _debug: 0
   _defaultMaterial: {fileID: 2100000, guid: e1aad33bf16194534a7c99e7c01a8249, type: 2}
   _kernelShader: {fileID: 4800000, guid: 5e5e161a3708e40119404232637809fc, type: 3}
@@ -238,11 +299,80 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1444205596}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 5, z: -6}
+  m_LocalPosition: {x: 0, y: 7.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
+--- !u!1 &1453494657
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1453494659}
+  - 114: {fileID: 1453494658}
+  m_Layer: 0
+  m_Name: Confetti
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1453494658
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1453494657}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 051131338091a4b3d861d193e64fb704, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _maxParticles: 10000
+  _emitterCenter: {x: 0, y: 0, z: 0}
+  _emitterSize: {x: 10, y: 4, z: 10}
+  _throttle: 1
+  _minLife: 3
+  _maxLife: 4
+  _minSpeed: 1
+  _maxSpeed: 3
+  _direction: {x: 0, y: -1, z: 0}
+  _spread: .319999993
+  _minSpin: 300
+  _maxSpin: 600
+  _noiseAmplitude: 1
+  _noiseFrequency: .600000024
+  _noiseSpeed: 1
+  _shapes:
+  - {fileID: 4300004, guid: 2435b8e088489402c9a997107b5922e9, type: 3}
+  - {fileID: 4300002, guid: 2435b8e088489402c9a997107b5922e9, type: 3}
+  - {fileID: 4300006, guid: 2435b8e088489402c9a997107b5922e9, type: 3}
+  - {fileID: 4300000, guid: 2435b8e088489402c9a997107b5922e9, type: 3}
+  _minScale: 1
+  _maxScale: 1.35549545
+  _material: {fileID: 2100000, guid: 5da077789f83e4b47a662370329deb99, type: 2}
+  _castShadows: 1
+  _receiveShadows: 0
+  _randomSeed: 3
+  _debug: 0
+  _defaultMaterial: {fileID: 2100000, guid: e1aad33bf16194534a7c99e7c01a8249, type: 2}
+  _kernelShader: {fileID: 4800000, guid: 5e5e161a3708e40119404232637809fc, type: 3}
+  _debugShader: {fileID: 4800000, guid: ad2397ccf551046ecb4df814f027d430, type: 3}
+--- !u!4 &1453494659
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1453494657}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 7.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
 --- !u!1 &1818432682
 GameObject:
   m_ObjectHideFlags: 0
@@ -327,7 +457,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1818432682}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalPosition: {x: 0, y: 0, z: -7.80000019}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1392203992}
@@ -345,7 +475,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tweakMode: 1
   Threshold: .5
-  MasterAmount: .100000001
+  MasterAmount: .200000003
   MediumAmount: 1
   LargeAmount: 3
   Tint: {r: 1, g: 1, b: 1, a: 1}
@@ -366,7 +496,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75febd242c999f04d9654522a10c006b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  intensity: 3
+  intensity: 2
   radius: 1.66999996
   blurIterations: 3
   blurFilterDistance: 2
@@ -415,73 +545,6 @@ MonoBehaviour:
   rotationComponents: {x: 1, y: 1, z: 0}
   positionOctave: 3
   rotationOctave: 3
---- !u!1 &1934249226
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 1934249228}
-  - 114: {fileID: 1934249227}
-  m_Layer: 0
-  m_Name: Petal Spray
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1934249227
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1934249226}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 051131338091a4b3d861d193e64fb704, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _maxParticles: 3000
-  _emitterCenter: {x: 0, y: 0, z: 0}
-  _emitterSize: {x: 15, y: 15, z: 5}
-  _throttle: 1
-  _minLife: 1
-  _maxLife: 4
-  _minSpeed: 2
-  _maxSpeed: 10
-  _direction: {x: 0, y: 0, z: 1}
-  _spread: .200000003
-  _minSpin: 300
-  _maxSpin: 600
-  _noiseAmplitude: 5
-  _noiseFrequency: .200000003
-  _noiseSpeed: 1
-  _shapes:
-  - {fileID: 4300010, guid: 7977aa2e23a3b4949b0dec50b282bc9b, type: 3}
-  - {fileID: 4300008, guid: 7977aa2e23a3b4949b0dec50b282bc9b, type: 3}
-  _minScale: .660268426
-  _maxScale: .799328983
-  _material: {fileID: 2100000, guid: 6f4d432208a7a46cdbf2fd21fab93e74, type: 2}
-  _castShadows: 1
-  _receiveShadows: 0
-  _randomSeed: 3
-  _debug: 0
-  _defaultMaterial: {fileID: 2100000, guid: e1aad33bf16194534a7c99e7c01a8249, type: 2}
-  _kernelShader: {fileID: 4800000, guid: 5e5e161a3708e40119404232637809fc, type: 3}
-  _debugShader: {fileID: 4800000, guid: ad2397ccf551046ecb4df814f027d430, type: 3}
---- !u!4 &1934249228
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1934249226}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 5, z: -6}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 0
 --- !u!1 &2022344248
 GameObject:
   m_ObjectHideFlags: 0
@@ -536,7 +599,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2022344248}
-  m_LocalRotation: {x: .32519275, y: -.640225351, z: .626351595, w: .303389102}
+  m_LocalRotation: {x: .608636856, y: -.771813989, z: .180350989, w: .0365770608}
   m_LocalPosition: {x: 1.64856625, y: .356560707, z: 1.86602211}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
