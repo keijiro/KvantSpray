@@ -8,7 +8,7 @@ Material:
   m_PrefabInternal: {fileID: 0}
   m_Name: Spray 2
   m_Shader: {fileID: 4800000, guid: 8e1247c2208bf4bef82f45b4c36f0600, type: 3}
-  m_ShaderKeywords: _COLORMODE_RANDOM
+  m_ShaderKeywords: _ALBEDOMAP _COLORMODE_RANDOM _NORMALMAP _OCCLUSIONMAP
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -19,7 +19,7 @@ Material:
         first:
           name: _MainTex
         second:
-          m_Texture: {fileID: 0}
+          m_Texture: {fileID: 2800000, guid: 0c2641f16f0c74dc8bd65cc0f24b03df, type: 3}
           m_Scale: {x: 1, y: 1}
           m_Offset: {x: 0, y: 0}
       data:
@@ -27,6 +27,13 @@ Material:
           name: _BumpMap
         second:
           m_Texture: {fileID: 0}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+      data:
+        first:
+          name: _NormalMap
+        second:
+          m_Texture: {fileID: 2800000, guid: 912fe0350b83a4934aa3799ef6fced00, type: 3}
           m_Scale: {x: 1, y: 1}
           m_Offset: {x: 0, y: 0}
       data:
@@ -47,7 +54,7 @@ Material:
         first:
           name: _OcclusionMap
         second:
-          m_Texture: {fileID: 0}
+          m_Texture: {fileID: 2800000, guid: c8fd564835bc6474c84c6798e7d7e2b5, type: 3}
           m_Scale: {x: 1, y: 1}
           m_Offset: {x: 0, y: 0}
       data:
@@ -108,7 +115,7 @@ Material:
       data:
         first:
           name: _Smoothness
-        second: .340000004
+        second: .261000007
       data:
         first:
           name: _Parallax
@@ -144,7 +151,7 @@ Material:
       data:
         first:
           name: _Metallic
-        second: .291999996
+        second: .363999993
       data:
         first:
           name: _ScaleMin
@@ -161,6 +168,14 @@ Material:
         first:
           name: _RandomSeed
         second: 0
+      data:
+        first:
+          name: _NormalScale
+        second: 2
+      data:
+        first:
+          name: _OcclusionStr
+        second: 1
     m_Colors:
       data:
         first:
@@ -169,8 +184,8 @@ Material:
       data:
         first:
           name: _Color
-        second: {r: .286764681, g: .286764681, b: .286764681, a: 1}
+        second: {r: .735294104, g: .735294104, b: .735294104, a: 1}
       data:
         first:
           name: _Color2
-        second: {r: .308823526, g: .252320737, b: .215722322, a: 1}
+        second: {r: .698529422, g: .455461562, b: .323583513, a: 1}

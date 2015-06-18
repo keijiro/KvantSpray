@@ -324,9 +324,12 @@ MonoBehaviour:
   _noiseFrequency: .703999996
   _noiseSpeed: 1
   _shapes:
-  - {fileID: 4300022, guid: e1d194b60c7a84350b782cd7d7870584, type: 3}
-  _minScale: .0369729698
-  _maxScale: .227031887
+  - {fileID: 4300006, guid: d156dcf56f86f404393203fbed35c031, type: 3}
+  - {fileID: 4300004, guid: d156dcf56f86f404393203fbed35c031, type: 3}
+  - {fileID: 4300002, guid: d156dcf56f86f404393203fbed35c031, type: 3}
+  - {fileID: 4300000, guid: d156dcf56f86f404393203fbed35c031, type: 3}
+  _minScale: .800000012
+  _maxScale: 1.5
   _material: {fileID: 2100000, guid: b516e39e18a644c2a884db62ba4f7ee3, type: 2}
   _castShadows: 0
   _receiveShadows: 0

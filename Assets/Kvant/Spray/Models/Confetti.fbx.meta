@@ -1,51 +1,32 @@
 fileFormatVersion: 2
-guid: a8e303374d34f4235b1c7b5580f73486
+guid: 2435b8e088489402c9a997107b5922e9
+timeCreated: 1434634532
+licenseType: Pro
 ModelImporter:
-  serializedVersion: 16
+  serializedVersion: 18
   fileIDToRecycleName:
     100000: //RootNode
-    100002: Obj01
-    100004: Obj02
-    100006: Obj03
-    100008: Obj04
-    100010: Obj05
-    100012: Obj06
-    100014: Obj07
-    100016: Obj08
+    100002: Confetti 1
+    100004: Confetti 2
+    100006: Confetti 3
+    100008: Confetti 4
     400000: //RootNode
-    400002: Obj01
-    400004: Obj02
-    400006: Obj03
-    400008: Obj04
-    400010: Obj05
-    400012: Obj06
-    400014: Obj07
-    400016: Obj08
-    2300000: Obj01
-    2300002: Obj02
-    2300004: Obj03
-    2300006: Obj04
-    2300008: Obj05
-    2300010: Obj06
-    2300012: Obj07
-    2300014: Obj08
-    3300000: Obj01
-    3300002: Obj02
-    3300004: Obj03
-    3300006: Obj04
-    3300008: Obj05
-    3300010: Obj06
-    3300012: Obj07
-    3300014: Obj08
-    4300000: Obj02
-    4300002: Obj07
-    4300004: Obj08
-    4300006: Obj06
-    4300008: Obj05
-    4300010: Obj04
-    4300012: Obj03
-    4300014: Obj01
-    9500000: //RootNode
+    400002: Confetti 1
+    400004: Confetti 2
+    400006: Confetti 3
+    400008: Confetti 4
+    2300000: Confetti 1
+    2300002: Confetti 2
+    2300004: Confetti 3
+    2300006: Confetti 4
+    3300000: Confetti 1
+    3300002: Confetti 2
+    3300004: Confetti 3
+    3300006: Confetti 4
+    4300000: Confetti 4
+    4300002: Confetti 2
+    4300004: Confetti 1
+    4300006: Confetti 3
   materials:
     importMaterials: 0
     materialName: 0
@@ -55,6 +36,10 @@ ModelImporter:
     bakeSimulation: 0
     optimizeGameObjects: 0
     motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
     animationCompression: 1
     animationRotationError: .5
     animationPositionError: .5
@@ -65,7 +50,7 @@ ModelImporter:
     isReadable: 1
   meshes:
     lODScreenPercentages: []
-    globalScale: 1
+    globalScale: .0500000007
     meshCompression: 0
     addColliders: 0
     importBlendShapes: 0
@@ -73,17 +58,19 @@ ModelImporter:
     generateSecondaryUV: 0
     useFileUnits: 1
     optimizeMeshForGPU: 1
+    keepQuads: 0
     weldVertices: 1
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
+    useFileScale: 1
   tangentSpace:
     normalSmoothAngle: 60
     splitTangentsAcrossUV: 1
     normalImportMode: 0
-    tangentImportMode: 2
-  importAnimation: 0
+    tangentImportMode: 1
+  importAnimation: 1
   copyAvatar: 0
   humanDescription:
     human: []
@@ -100,3 +87,5 @@ ModelImporter:
   animationType: 0
   additionalBone: 0
   userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -14,7 +14,7 @@ SceneSettings:
 RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 6
-  m_Fog: 1
+  m_Fog: 0
   m_FogColor: {r: .316176474, g: .316176474, b: .316176474, a: 1}
   m_FogMode: 3
   m_FogDensity: .0500000007
@@ -131,7 +131,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1444205598}
-  - {fileID: 1870839674}
   m_Father: {fileID: 0}
   m_RootOrder: 3
 --- !u!1 &1187919843
@@ -285,7 +284,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 051131338091a4b3d861d193e64fb704, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxParticles: 40000
+  _maxParticles: 20000
   _emitterCenter: {x: 0, y: 0, z: 0}
   _emitterSize: {x: 8, y: 8, z: 8}
   _throttle: 0
@@ -301,12 +300,12 @@ MonoBehaviour:
   _noiseFrequency: .300000012
   _noiseSpeed: 1
   _shapes:
-  - {fileID: 4300014, guid: a8e303374d34f4235b1c7b5580f73486, type: 3}
-  - {fileID: 4300000, guid: a8e303374d34f4235b1c7b5580f73486, type: 3}
-  - {fileID: 4300012, guid: a8e303374d34f4235b1c7b5580f73486, type: 3}
-  - {fileID: 4300004, guid: a8e303374d34f4235b1c7b5580f73486, type: 3}
-  _minScale: .0393529385
-  _maxScale: .175336719
+  - {fileID: 4300006, guid: 19fd098692a084a2494eaf1819ef7336, type: 3}
+  - {fileID: 4300004, guid: 19fd098692a084a2494eaf1819ef7336, type: 3}
+  - {fileID: 4300002, guid: 19fd098692a084a2494eaf1819ef7336, type: 3}
+  - {fileID: 4300000, guid: 19fd098692a084a2494eaf1819ef7336, type: 3}
+  _minScale: .300000012
+  _maxScale: .600000024
   _material: {fileID: 2100000, guid: 6c4722bd9c0804f26a5414bb094d530f, type: 2}
   _castShadows: 1
   _receiveShadows: 0
@@ -396,7 +395,7 @@ Camera:
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_RenderingPath: -1
+  m_RenderingPath: 3
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
   m_HDR: 1
@@ -499,75 +498,6 @@ MonoBehaviour:
   rotationComponents: {x: 1, y: 1, z: 0}
   positionOctave: 3
   rotationOctave: 3
---- !u!1 &1870839672
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 1870839674}
-  - 114: {fileID: 1870839673}
-  m_Layer: 0
-  m_Name: Spray 2
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1870839673
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1870839672}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 051131338091a4b3d861d193e64fb704, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _maxParticles: 2000
-  _emitterCenter: {x: 0, y: 0, z: 0}
-  _emitterSize: {x: 8, y: 8, z: 8}
-  _throttle: 0
-  _minLife: .976504624
-  _maxLife: 3.15855169
-  _minSpeed: 0
-  _maxSpeed: .464451015
-  _direction: {x: 0, y: 0, z: 1}
-  _spread: 1
-  _minSpin: 312.5
-  _maxSpin: 709.0625
-  _noiseAmplitude: 2.79999995
-  _noiseFrequency: .300000012
-  _noiseSpeed: 1
-  _shapes:
-  - {fileID: 4300014, guid: a8e303374d34f4235b1c7b5580f73486, type: 3}
-  - {fileID: 4300000, guid: a8e303374d34f4235b1c7b5580f73486, type: 3}
-  - {fileID: 4300012, guid: a8e303374d34f4235b1c7b5580f73486, type: 3}
-  - {fileID: 4300004, guid: a8e303374d34f4235b1c7b5580f73486, type: 3}
-  _minScale: .0393529385
-  _maxScale: .175336719
-  _material: {fileID: 2100000, guid: 6c4722bd9c0804f26a5414bb094d530f, type: 2}
-  _castShadows: 1
-  _receiveShadows: 0
-  _randomSeed: 10
-  _debug: 0
-  _defaultMaterial: {fileID: 0}
-  _kernelShader: {fileID: 4800000, guid: 5e5e161a3708e40119404232637809fc, type: 3}
-  _debugShader: {fileID: 4800000, guid: ad2397ccf551046ecb4df814f027d430, type: 3}
---- !u!4 &1870839674
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1870839672}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 878620951}
-  m_RootOrder: 1
 --- !u!1 &2022344248
 GameObject:
   m_ObjectHideFlags: 0
