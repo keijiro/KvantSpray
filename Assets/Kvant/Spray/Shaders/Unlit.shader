@@ -24,8 +24,11 @@ Shader "Kvant/Spray/Transparent Unlit"
 
         [KeywordEnum(Single, Animate, Random)]
         _ColorMode ("-", Float) = 0
-        _Color     ("-", Color) = (1, 1, 1, 1)
-        _Color2    ("-", Color) = (0.5, 0.5, 0.5, 1)
+
+        [HDR] _Color  ("-", Color) = (1, 1, 1, 1)
+        [HDR] _Color2 ("-", Color) = (0.5, 0.5, 0.5, 1)
+
+        _MainTex ("-", 2D) = "white"{}
 
         _ScaleMin ("-", Float) = 1
         _ScaleMax ("-", Float) = 1
@@ -36,29 +39,34 @@ Shader "Kvant/Spray/Transparent Unlit"
     CGINCLUDE
 
     #pragma shader_feature _COLORMODE_RANDOM
+    #pragma shader_feature _MAINTEX
     #pragma multi_compile_fog
 
     #include "UnityCG.cginc"
     #include "Common.cginc"
 
+    sampler2D _MainTex;
+    float4 _MainTex_ST;
     half _BlendMode;
 
     struct appdata
     {
         float4 vertex : POSITION;
-        float2 texcoord : TEXCOORD0;
+        float2 texcoord0 : TEXCOORD0;
+        float2 texcoord1 : TEXCOORD1;
     };
 
     struct v2f
     {
         float4 position : SV_POSITION;
+        float2 texcoord : TEXCOORD;
         half4 color : COLOR;
         UNITY_FOG_COORDS(0)
     };
 
     v2f vert(appdata v)
     {
-        float4 uv = float4(v.texcoord.xy + _BufferOffset, 0, 0);
+        float4 uv = float4(v.texcoord1.xy + _BufferOffset, 0, 0);
 
         float4 p = tex2Dlod(_PositionBuffer, uv);
         float4 r = tex2Dlod(_RotationBuffer, uv);
@@ -71,6 +79,9 @@ Shader "Kvant/Spray/Transparent Unlit"
         v2f o;
 
         o.position = mul(UNITY_MATRIX_MVP, v.vertex);
+    #if _MAINTEX
+        o.texcoord = TRANSFORM_TEX(v.texcoord0, _MainTex);
+    #endif
         o.color = calc_color(uv, l);
 
         UNITY_TRANSFER_FOG(o, o.position);
@@ -81,6 +92,9 @@ Shader "Kvant/Spray/Transparent Unlit"
     half4 frag(v2f i) : SV_Target
     {
         half4 c = i.color;
+    #if _MAINTEX
+        c *= tex2D(_MainTex, i.texcoord);
+    #endif
         UNITY_APPLY_FOG_COLOR(i.fogCoord, c, (half4)0);
         c *= float4(c.aaa, _BlendMode);
         return c;

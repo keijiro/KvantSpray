@@ -5,7 +5,6 @@
 // meshes until the number of vertices reaches to 64k or the number of copies
 // reaches to 4k.
 //
-
 using UnityEngine;
 
 namespace Kvant
@@ -53,11 +52,13 @@ namespace Kvant
 
             #region Private Methods
 
-            // Cache structure used to store the shape information.
+            // Cache structure which stores shape information
             struct ShapeCacheData
             {
                 Vector3[] vertices;
                 Vector3[] normals;
+                Vector4[] tangents;
+                Vector2[] uv;
                 int[] indices;
 
                 public ShapeCacheData(Mesh mesh)
@@ -65,12 +66,14 @@ namespace Kvant
                     if (mesh)
                     {
                         vertices = mesh.vertices;
-                        normals = mesh.normals;
-                        indices = mesh.GetIndices(0);
+                        normals  = mesh.normals;
+                        tangents = mesh.tangents;
+                        uv       = mesh.uv;
+                        indices  = mesh.GetIndices(0);
                     }
                     else
                     {
-                        // The source mesh is empty; replaces with a two-sided quad.
+                        // An empty mesh was given; replaces with a two-sided quad.
                         vertices = new Vector3[] {
                             new Vector3 (-1, +1, 0), new Vector3 (+1, +1, 0),
                             new Vector3 (-1, -1, 0), new Vector3 (+1, -1, 0),
@@ -82,6 +85,18 @@ namespace Kvant
                              Vector3.forward,  Vector3.forward,
                             -Vector3.forward, -Vector3.forward,
                             -Vector3.forward, -Vector3.forward,
+                        };
+                        tangents = new Vector4[] {
+                            new Vector4( 1, 0, 0, 1), new Vector4( 1, 0, 0, 1),
+                            new Vector4( 1, 0, 0, 1), new Vector4( 1, 0, 0, 1),
+                            new Vector4(-1, 0, 0, 1), new Vector4(-1, 0, 0, 1),
+                            new Vector4(-1, 0, 0, 1), new Vector4(-1, 0, 0, 1)
+                        };
+                        uv = new Vector2[] {
+                            new Vector2(0, 1), new Vector2(1, 1),
+                            new Vector2(0, 0), new Vector2(1, 0),
+                            new Vector2(1, 1), new Vector2(0, 1),
+                            new Vector2(1, 0), new Vector2(0, 0)
                         };
                         indices = new int[] {0, 1, 2, 3, 2, 1, 4, 5, 6, 7, 6, 5};
                     }
@@ -100,6 +115,16 @@ namespace Kvant
                     System.Array.Copy(normals, 0, destination, position, normals.Length);
                 }
 
+                public void CopyTangentsTo(Vector4[] destination, int position)
+                {
+                    System.Array.Copy(tangents, 0, destination, position, tangents.Length);
+                }
+
+                public void CopyUVTo(Vector2[] destination, int position)
+                {
+                    System.Array.Copy(uv, 0, destination, position, uv.Length);
+                }
+
                 public void CopyIndicesTo(int[] destination, int position, int offset)
                 {
                     for (var i = 0; i < indices.Length; i++)
@@ -107,7 +132,7 @@ namespace Kvant
                 }
             }
 
-            // Mesh combiner functoin.
+            // Mesh combiner functoin
             void CombineMeshes(Mesh[] shapes)
             {
                 ShapeCacheData[] cache;
@@ -151,41 +176,47 @@ namespace Kvant
                 }
 
                 // Create vertex arrays.
-                var va = new Vector3[vc];
-                var na = new Vector3[vc];
-                var ta = new Vector2[vc];
-                var ia = new int[ic];
+                var vertices = new Vector3[vc];
+                var normals  = new Vector3[vc];
+                var tangents = new Vector4[vc];
+                var uv       = new Vector2[vc];
+                var uv2      = new Vector2[vc];
+                var indicies = new int[ic];
 
-                for (int va_i = 0, ia_i = 0, e_i = 0; va_i < vc; e_i++)
+                for (int v_i = 0, i_i = 0, e_i = 0; v_i < vc; e_i++)
                 {
                     var s = cache[e_i % cache.Length];
 
-                    s.CopyVerticesTo(va, va_i);
-                    s.CopyNormalsTo(na, va_i);
-                    s.CopyIndicesTo(ia, ia_i, va_i);
+                    s.CopyVerticesTo(vertices, v_i);
+                    s.CopyNormalsTo (normals,  v_i);
+                    s.CopyTangentsTo(tangents, v_i);
+                    s.CopyUVTo      (uv,       v_i);
+                    s.CopyIndicesTo (indicies, i_i, v_i);
 
-                    var uv = new Vector2((float)e_i / _copyCount, 0);
-                    for (var i = 0; i < s.VertexCount; i++) ta[va_i + i] = uv;
+                    var coord = new Vector2((float)e_i / _copyCount, 0);
+                    for (var i = 0; i < s.VertexCount; i++) uv2[v_i + i] = coord;
 
-                    va_i += s.VertexCount;
-                    ia_i += s.IndexCount;
+                    v_i += s.VertexCount;
+                    i_i += s.IndexCount;
                 }
 
                 // Create a mesh object.
                 _mesh = new Mesh();
 
-                _mesh.vertices = va;
-                _mesh.normals = na;
-                _mesh.uv = ta;
+                _mesh.vertices = vertices;
+                _mesh.normals  = normals;
+                _mesh.tangents = tangents;
+                _mesh.uv       = uv;
+                _mesh.uv2      = uv2;
 
-                _mesh.SetIndices(ia, MeshTopology.Triangles, 0);
+                _mesh.SetIndices(indicies, MeshTopology.Triangles, 0);
                 _mesh.Optimize();
 
                 // This only for temporary use. Don't save.
                 _mesh.hideFlags = HideFlags.DontSave;
 
                 // Avoid being culled.
-                _mesh.bounds = new Bounds(Vector3.zero, Vector3.one * 100);
+                _mesh.bounds = new Bounds(Vector3.zero, Vector3.one * 1000);
             }
 
             #endregion

@@ -6,9 +6,9 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: Spray 1
+  m_Name: Leaf
   m_Shader: {fileID: 4800000, guid: 8e1247c2208bf4bef82f45b4c36f0600, type: 3}
-  m_ShaderKeywords: _COLORMODE_RANDOM
+  m_ShaderKeywords: _ALBEDOMAP _COLORMODE_RANDOM
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -19,12 +19,19 @@ Material:
         first:
           name: _MainTex
         second:
-          m_Texture: {fileID: 0}
+          m_Texture: {fileID: 2800000, guid: 0c2641f16f0c74dc8bd65cc0f24b03df, type: 3}
           m_Scale: {x: 1, y: 1}
           m_Offset: {x: 0, y: 0}
       data:
         first:
           name: _BumpMap
+        second:
+          m_Texture: {fileID: 0}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+      data:
+        first:
+          name: _NormalMap
         second:
           m_Texture: {fileID: 0}
           m_Scale: {x: 1, y: 1}
@@ -108,7 +115,7 @@ Material:
       data:
         first:
           name: _Smoothness
-        second: .338999987
+        second: .108000003
       data:
         first:
           name: _Parallax
@@ -144,7 +151,7 @@ Material:
       data:
         first:
           name: _Metallic
-        second: .781000018
+        second: .305999994
       data:
         first:
           name: _ScaleMin
@@ -161,6 +168,14 @@ Material:
         first:
           name: _RandomSeed
         second: 0
+      data:
+        first:
+          name: _NormalScale
+        second: 1
+      data:
+        first:
+          name: _OcclusionStr
+        second: 1
     m_Colors:
       data:
         first:
@@ -169,8 +184,8 @@ Material:
       data:
         first:
           name: _Color
-        second: {r: 1, g: 1, b: 1, a: 1}
+        second: {r: .995334744, g: 1, b: .661764741, a: 1}
       data:
         first:
           name: _Color2
-        second: {r: 0, g: .992647052, b: .376521319, a: 1}
+        second: {r: .496956289, g: 1, b: .0882353187, a: 1}
