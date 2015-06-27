@@ -14,8 +14,6 @@ namespace Kvant
         MaterialProperty _color2;
         MaterialProperty _mainTex;
 
-        static GUIContent _textureText = new GUIContent("Texture");
-
         bool _initial = true;
 
         void FindProperties(MaterialProperty[] props)
