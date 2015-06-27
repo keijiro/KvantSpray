@@ -176,10 +176,26 @@ namespace Kvant
 
         [SerializeField]
         Material _material;
+        bool _owningMaterial; // whether owning the material
 
-        public Material material {
+        public Material sharedMaterial {
             get { return _material; }
             set { _material = value; }
+        }
+
+        public Material material {
+            get {
+                if (!_owningMaterial) {
+                    _material = Instantiate<Material>(_material);
+                    _owningMaterial = true;
+                }
+                return _material;
+            }
+            set {
+                if (_owningMaterial) Destroy(_material, 0.1f);
+                _material = value;
+                _owningMaterial = false;
+            }
         }
 
         [SerializeField]
