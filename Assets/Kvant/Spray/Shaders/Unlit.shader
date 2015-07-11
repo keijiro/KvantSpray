@@ -61,7 +61,7 @@ Shader "Kvant/Spray/Transparent Unlit"
         float4 position : SV_POSITION;
         float2 texcoord : TEXCOORD;
         half4 color : COLOR;
-        UNITY_FOG_COORDS(0)
+        UNITY_FOG_COORDS(1)
     };
 
     v2f vert(appdata v)
@@ -79,9 +79,7 @@ Shader "Kvant/Spray/Transparent Unlit"
         v2f o;
 
         o.position = mul(UNITY_MATRIX_MVP, v.vertex);
-    #if _MAINTEX
         o.texcoord = TRANSFORM_TEX(v.texcoord0, _MainTex);
-    #endif
         o.color = calc_color(uv, l);
 
         UNITY_TRANSFER_FOG(o, o.position);
