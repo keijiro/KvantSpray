@@ -33,6 +33,8 @@ Shader "Kvant/Spray/Transparent PBR"
         _OcclusionMap ("-", 2D) = "white"{}
         _OcclusionStr ("-", Range(0,1)) = 1
 
+        [HDR] _Emission ("-", Color) = (0, 0, 0)
+
         _ScaleMin ("-", Float) = 1
         _ScaleMax ("-", Float) = 1
 
@@ -49,6 +51,7 @@ Shader "Kvant/Spray/Transparent PBR"
         #pragma shader_feature _ALBEDOMAP
         #pragma shader_feature _NORMALMAP
         #pragma shader_feature _OCCLUSIONMAP
+        #pragma shader_feature _EMISSION
         #pragma target 3.0
 
         #include "Common.cginc"
@@ -61,6 +64,7 @@ Shader "Kvant/Spray/Transparent PBR"
         half _NormalScale;
         sampler2D _OcclusionMap;
         half _OcclusionStr;
+        half3 _Emission;
 
         struct Input
         {
@@ -105,6 +109,10 @@ Shader "Kvant/Spray/Transparent PBR"
         #if _OCCLUSIONMAP
             half4 occ = tex2D(_OcclusionMap, IN.uv_MainTex);
             o.Occlusion = lerp((half4)1, occ, _OcclusionStr);
+        #endif
+
+        #if _EMISSION
+            o.Emission = _Emission;
         #endif
 
             o.Metallic = _Metallic;

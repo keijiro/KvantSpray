@@ -18,6 +18,7 @@ namespace Kvant
         MaterialProperty _normalScale;
         MaterialProperty _occlusionMap;
         MaterialProperty _occlusionStr;
+        MaterialProperty _emission;
 
         static GUIContent _albedoText    = new GUIContent("Albedo");
         static GUIContent _normalMapText = new GUIContent("Normal Map");
@@ -37,6 +38,7 @@ namespace Kvant
             _normalScale  = FindProperty("_NormalScale", props);
             _occlusionMap = FindProperty("_OcclusionMap", props);
             _occlusionStr = FindProperty("_OcclusionStr", props);
+            _emission     = FindProperty("_Emission", props);
         }
 
         public override void OnGUI(MaterialEditor materialEditor, MaterialProperty[] properties)
@@ -82,6 +84,10 @@ namespace Kvant
             materialEditor.TexturePropertySingleLine(_occlusionText, _occlusionMap, _occlusionMap.textureValue ? _occlusionStr : null);
 			materialEditor.TextureScaleOffsetProperty(_albedoMap);
 
+            EditorGUILayout.Space();
+
+            materialEditor.ShaderProperty(_emission, "Emission");
+
             return EditorGUI.EndChangeCheck();
         }
 
@@ -90,6 +96,9 @@ namespace Kvant
             SetKeyword(material, "_ALBEDOMAP", material.GetTexture("_MainTex"));
             SetKeyword(material, "_NORMALMAP", material.GetTexture("_NormalMap"));
             SetKeyword(material, "_OCCLUSIONMAP", material.GetTexture("_OcclusionMap"));
+
+            var emissive = material.GetColor("_Emission").maxColorComponent > 0.1f / 255;
+            SetKeyword(material, "_EMISSION", emissive);
         }
 
         static void SetKeyword(Material m, string keyword, bool state)
