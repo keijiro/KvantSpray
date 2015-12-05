@@ -412,7 +412,7 @@ namespace Kvant
             for (var i = 0; i < _positionBuffer2.height; i++)
             {
                 uv.y = (0.5f + i) / _positionBuffer2.height;
-                props.AddVector("_BufferOffset", uv);
+                props.SetVector("_BufferOffset", uv);
                 Graphics.DrawMesh(
                     mesh, position, rotation,
                     material, 0, null, 0, props,
