@@ -243,6 +243,8 @@ namespace Kvant
 
         RenderTexture _positionBuffer1;
         RenderTexture _positionBuffer2;
+        RenderTexture _velocityBuffer1;
+        RenderTexture _velocityBuffer2;
         RenderTexture _rotationBuffer1;
         RenderTexture _rotationBuffer2;
         BulkMesh _bulkMesh;
@@ -315,16 +317,20 @@ namespace Kvant
 
             if (_positionBuffer1) DestroyImmediate(_positionBuffer1);
             if (_positionBuffer2) DestroyImmediate(_positionBuffer2);
+            if (_velocityBuffer1) DestroyImmediate(_velocityBuffer1);
+            if (_velocityBuffer2) DestroyImmediate(_velocityBuffer2);
             if (_rotationBuffer1) DestroyImmediate(_rotationBuffer1);
             if (_rotationBuffer2) DestroyImmediate(_rotationBuffer2);
 
             _positionBuffer1 = CreateBuffer();
             _positionBuffer2 = CreateBuffer();
+            _velocityBuffer1 = CreateBuffer();
+            _velocityBuffer2 = CreateBuffer();
             _rotationBuffer1 = CreateBuffer();
             _rotationBuffer2 = CreateBuffer();
 
-            if (!_kernelMaterial)  _kernelMaterial  = CreateMaterial(_kernelShader);
-            if (!_debugMaterial)   _debugMaterial   = CreateMaterial(_debugShader);
+            if (!_kernelMaterial) _kernelMaterial = CreateMaterial(_kernelShader);
+            if (!_debugMaterial)  _debugMaterial  = CreateMaterial(_debugShader);
 
             // Warming up
             UpdateKernelShader();
@@ -336,15 +342,33 @@ namespace Kvant
         void InitializeAndPrewarmBuffers()
         {
             Graphics.Blit(null, _positionBuffer2, _kernelMaterial, 0);
-            Graphics.Blit(null, _rotationBuffer2, _kernelMaterial, 1);
+            Graphics.Blit(null, _velocityBuffer2, _kernelMaterial, 1);
+            Graphics.Blit(null, _rotationBuffer2, _kernelMaterial, 2);
 
-            // Call the update kernels repeatedly.
-            for (var i = 0; i < 8; i++) {
-                Graphics.Blit(_positionBuffer2, _positionBuffer1, _kernelMaterial, 2);
-                Graphics.Blit(_rotationBuffer2, _rotationBuffer1, _kernelMaterial, 3);
-                Graphics.Blit(_positionBuffer1, _positionBuffer2, _kernelMaterial, 2);
-                Graphics.Blit(_rotationBuffer1, _rotationBuffer2, _kernelMaterial, 3);
-            }
+            for (var i = 0; i < 8; i++) SwapBuffersAndInvokeKernels();
+        }
+
+        void SwapBuffersAndInvokeKernels()
+        {
+            var tempPosition = _positionBuffer1;
+            var tempVelocity = _velocityBuffer1;
+            var tempRotation = _rotationBuffer1;
+
+            _positionBuffer1 = _positionBuffer2;
+            _velocityBuffer1 = _velocityBuffer2;
+            _rotationBuffer1 = _rotationBuffer2;
+
+            _positionBuffer2 = tempPosition;
+            _velocityBuffer2 = tempVelocity;
+            _rotationBuffer2 = tempRotation;
+
+            _kernelMaterial.SetTexture("_PositionTex", _positionBuffer1);
+            _kernelMaterial.SetTexture("_VelocityTex", _velocityBuffer1);
+            _kernelMaterial.SetTexture("_RotationTex", _rotationBuffer1);
+
+            Graphics.Blit(null, _positionBuffer2, _kernelMaterial, 3);
+            Graphics.Blit(null, _velocityBuffer2, _kernelMaterial, 4);
+            Graphics.Blit(null, _rotationBuffer2, _kernelMaterial, 5);
         }
 
         #endregion
@@ -361,6 +385,8 @@ namespace Kvant
             if (_bulkMesh != null) _bulkMesh.Release();
             if (_positionBuffer1) DestroyImmediate(_positionBuffer1);
             if (_positionBuffer2) DestroyImmediate(_positionBuffer2);
+            if (_velocityBuffer1) DestroyImmediate(_velocityBuffer1);
+            if (_velocityBuffer2) DestroyImmediate(_velocityBuffer2);
             if (_rotationBuffer1) DestroyImmediate(_rotationBuffer1);
             if (_rotationBuffer2) DestroyImmediate(_rotationBuffer2);
             if (_kernelMaterial)  DestroyImmediate(_kernelMaterial);
@@ -374,24 +400,9 @@ namespace Kvant
             UpdateKernelShader();
 
             if (Application.isPlaying)
-            {
-                // Swap the particle buffers.
-                var temp = _positionBuffer1;
-                _positionBuffer1 = _positionBuffer2;
-                _positionBuffer2 = temp;
-
-                temp = _rotationBuffer1;
-                _rotationBuffer1 = _rotationBuffer2;
-                _rotationBuffer2 = temp;
-
-                // Call the kernel shader.
-                Graphics.Blit(_positionBuffer1, _positionBuffer2, _kernelMaterial, 2);
-                Graphics.Blit(_rotationBuffer1, _rotationBuffer2, _kernelMaterial, 3);
-            }
+                SwapBuffersAndInvokeKernels();
             else
-            {
                 InitializeAndPrewarmBuffers();
-            }
 
             // Make a material property block for the following drawcalls.
             var props = new MaterialPropertyBlock();
@@ -424,13 +435,16 @@ namespace Kvant
         {
             if (_debug && Event.current.type.Equals(EventType.Repaint))
             {
-                if (_debugMaterial && _positionBuffer2 && _rotationBuffer2)
+                if (_debugMaterial && _positionBuffer2 && _velocityBuffer2 && _rotationBuffer2)
                 {
                     var w = _positionBuffer2.width;
                     var h = _positionBuffer2.height;
 
                     var rect = new Rect(0, 0, w, h);
                     Graphics.DrawTexture(rect, _positionBuffer2, _debugMaterial);
+
+                    rect.y += h;
+                    Graphics.DrawTexture(rect, _velocityBuffer2, _debugMaterial);
 
                     rect.y += h;
                     Graphics.DrawTexture(rect, _rotationBuffer2, _debugMaterial);

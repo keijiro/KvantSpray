@@ -1,18 +1,23 @@
 ﻿//
 // GPGPU kernels for Spray
 //
-// Texture format for position kernels:
+// Position buffer format:
 // .xyz = particle position
 // .w   = life (+0.5 -> -0.5)
 //
-// Texture format for rotation kernels:
+// Velocity buffer format:
+// .xyz = particle velocity
+//
+// Rotation buffer format:
 // .xyzw = particle rotation
-// 
+//
 Shader "Hidden/Kvant/Spray/Kernel"
 {
     Properties
     {
-        _MainTex ("-", 2D) = ""{}
+        _PositionTex ("-", 2D) = ""{}
+        _VelocityTex ("-", 2D) = ""{}
+        _RotationTex ("-", 2D) = ""{}
     }
 
     CGINCLUDE
@@ -20,7 +25,9 @@ Shader "Hidden/Kvant/Spray/Kernel"
     #include "UnityCG.cginc"
     #include "SimplexNoiseGrad3D.cginc"
 
-    sampler2D _MainTex;
+    sampler2D _PositionTex;
+    sampler2D _VelocityTex;
+    sampler2D _RotationTex;
 
     float3 _EmitterPos;
     float3 _EmitterSize;
@@ -110,22 +117,28 @@ Shader "Hidden/Kvant/Spray/Kernel"
         return float3(u2 * cos(theta), u2 * sin(theta), u);
     }
 
-    // Pass 0: position initialization kernel
-    float4 frag_init_position(v2f_img i) : SV_Target 
+    // Pass 0: initial position
+    float4 frag_init_position(v2f_img i) : SV_Target
     {
         return new_particle_position(i.uv);
     }
 
-    // Pass 1: rotation initializatin kernel
-    float4 frag_init_rotation(v2f_img i) : SV_Target 
+    // Pass 1: initial velocity
+    float4 frag_init_velocity(v2f_img i) : SV_Target
+    {
+        return 0;
+    }
+
+    // Pass 2: initial rotation
+    float4 frag_init_rotation(v2f_img i) : SV_Target
     {
         return new_particle_rotation(i.uv);
     }
 
-    // Pass 2: position update kernel
-    float4 frag_update_position(v2f_img i) : SV_Target 
+    // Pass 3: position update
+    float4 frag_update_position(v2f_img i) : SV_Target
     {
-        float4 p = tex2D(_MainTex, i.uv);
+        float4 p = tex2D(_PositionTex, i.uv);
 
         // Decaying
         float dt = _Config.z;
@@ -144,10 +157,16 @@ Shader "Hidden/Kvant/Spray/Kernel"
         }
     }
 
-    // Pass 3: rotation update kernel
-    float4 frag_update_rotation(v2f_img i) : SV_Target 
+    // Pass 4: velocity update
+    float4 frag_update_velocity(v2f_img i) : SV_Target
     {
-        float4 r = tex2D(_MainTex, i.uv);
+        return tex2D(_VelocityTex, i.uv);
+    }
+
+    // Pass 5: rotation update
+    float4 frag_update_rotation(v2f_img i) : SV_Target
+    {
+        float4 r = tex2D(_RotationTex, i.uv);
 
         // Delta rotation
         float dt = _Config.z;
@@ -175,6 +194,14 @@ Shader "Hidden/Kvant/Spray/Kernel"
             CGPROGRAM
             #pragma target 3.0
             #pragma vertex vert_img
+            #pragma fragment frag_init_velocity
+            ENDCG
+        }
+        Pass
+        {
+            CGPROGRAM
+            #pragma target 3.0
+            #pragma vertex vert_img
             #pragma fragment frag_init_rotation
             ENDCG
         }
@@ -184,6 +211,14 @@ Shader "Hidden/Kvant/Spray/Kernel"
             #pragma target 3.0
             #pragma vertex vert_img
             #pragma fragment frag_update_position
+            ENDCG
+        }
+        Pass
+        {
+            CGPROGRAM
+            #pragma target 3.0
+            #pragma vertex vert_img
+            #pragma fragment frag_update_velocity
             ENDCG
         }
         Pass
