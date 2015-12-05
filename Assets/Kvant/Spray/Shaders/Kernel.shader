@@ -18,7 +18,7 @@ Shader "Hidden/Kvant/Spray/Kernel"
     CGINCLUDE
 
     #include "UnityCG.cginc"
-    #include "ClassicNoise3D.cginc"
+    #include "SimplexNoiseGrad3D.cginc"
 
     sampler2D _MainTex;
 
@@ -89,11 +89,14 @@ Shader "Hidden/Kvant/Spray/Kernel"
 
         // Noise vector
         p = (p + _Config.w * _NoiseParams.z) * _NoiseParams.x;
-        float nx = cnoise(p + float3(138.2, 0, 0));
-        float ny = cnoise(p + float3(0, 138.2, 0));
-        float nz = cnoise(p + float3(0, 0, 138.2));
+        //float nx = snoise(p + float3(138.2, 0, 0));
+        //float ny = snoise(p + float3(0, 138.2, 0));
+        //float nz = snoise(p + float3(0, 0, 138.2));
+        float3 n1 = snoise_grad(p + float3(138.2, 0, 0));
+        float3 n2 = snoise_grad(p + float3(0, 138.2, 0));
+        float3 vn = cross(n1, n2);
 
-        return v + float3(nx, ny, nz) * _NoiseParams.y;
+        return v + vn * _NoiseParams.y;
     }
 
     // Deterministic random rotation axis
