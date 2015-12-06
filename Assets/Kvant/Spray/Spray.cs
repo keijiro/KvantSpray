@@ -350,6 +350,7 @@ namespace Kvant
 
         void SwapBuffersAndInvokeKernels()
         {
+            // Swap the buffers.
             var tempPosition = _positionBuffer1;
             var tempVelocity = _velocityBuffer1;
             var tempRotation = _rotationBuffer1;
@@ -362,11 +363,15 @@ namespace Kvant
             _velocityBuffer2 = tempVelocity;
             _rotationBuffer2 = tempRotation;
 
-            _kernelMaterial.SetTexture("_PositionTex", _positionBuffer1);
-            _kernelMaterial.SetTexture("_VelocityTex", _velocityBuffer1);
-            _kernelMaterial.SetTexture("_RotationTex", _rotationBuffer1);
-
+            // Invoke the position update kernel.
+            _kernelMaterial.SetTexture("_PositionBuffer", _positionBuffer1);
+            _kernelMaterial.SetTexture("_VelocityBuffer", _velocityBuffer1);
+            _kernelMaterial.SetTexture("_RotationBuffer", _rotationBuffer1);
             Graphics.Blit(null, _positionBuffer2, _kernelMaterial, 3);
+
+            // Invoke the velocity and rotation update kernel
+            // with the updated position.
+            _kernelMaterial.SetTexture("_PositionBuffer", _positionBuffer2);
             Graphics.Blit(null, _velocityBuffer2, _kernelMaterial, 4);
             Graphics.Blit(null, _rotationBuffer2, _kernelMaterial, 5);
         }

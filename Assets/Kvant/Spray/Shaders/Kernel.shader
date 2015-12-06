@@ -15,9 +15,9 @@ Shader "Hidden/Kvant/Spray/Kernel"
 {
     Properties
     {
-        _PositionTex ("-", 2D) = ""{}
-        _VelocityTex ("-", 2D) = ""{}
-        _RotationTex ("-", 2D) = ""{}
+        _PositionBuffer ("-", 2D) = ""{}
+        _VelocityBuffer ("-", 2D) = ""{}
+        _RotationBuffer ("-", 2D) = ""{}
     }
 
     CGINCLUDE
@@ -25,9 +25,9 @@ Shader "Hidden/Kvant/Spray/Kernel"
     #include "UnityCG.cginc"
     #include "SimplexNoiseGrad3D.cginc"
 
-    sampler2D _PositionTex;
-    sampler2D _VelocityTex;
-    sampler2D _RotationTex;
+    sampler2D _PositionBuffer;
+    sampler2D _VelocityBuffer;
+    sampler2D _RotationBuffer;
 
     float3 _EmitterPos;
     float3 _EmitterSize;
@@ -128,8 +128,8 @@ Shader "Hidden/Kvant/Spray/Kernel"
     // Pass 3: position update
     float4 frag_update_position(v2f_img i) : SV_Target
     {
-        float4 p = tex2D(_PositionTex, i.uv);
-        float3 v = tex2D(_VelocityTex, i.uv).xyz;
+        float4 p = tex2D(_PositionBuffer, i.uv);
+        float3 v = tex2D(_VelocityBuffer, i.uv).xyz;
 
         // Decaying
         float dt = _Config.z;
@@ -151,8 +151,8 @@ Shader "Hidden/Kvant/Spray/Kernel"
     // Pass 4: velocity update
     float4 frag_update_velocity(v2f_img i) : SV_Target
     {
-        float4 p = tex2D(_PositionTex, i.uv);
-        float3 v = tex2D(_VelocityTex, i.uv).xyz;
+        float4 p = tex2D(_PositionBuffer, i.uv);
+        float3 v = tex2D(_VelocityBuffer, i.uv).xyz;
 
         if (p.w < 0.5)
         {
@@ -176,7 +176,7 @@ Shader "Hidden/Kvant/Spray/Kernel"
     // Pass 5: rotation update
     float4 frag_update_rotation(v2f_img i) : SV_Target
     {
-        float4 r = tex2D(_RotationTex, i.uv);
+        float4 r = tex2D(_RotationBuffer, i.uv);
 
         // Delta rotation
         float dt = _Config.z;
