@@ -69,20 +69,7 @@ Shader "Hidden/Kvant/Spray/Kernel"
         return float4(p, 0.5) + offs;
     }
 
-    float4 new_particle_rotation(float2 uv)
-    {
-        // Uniform random unit quaternion
-        // http://www.realtimerendering.com/resources/GraphicsGems/gemsiii/urot.c
-        float r = nrand(uv, 3);
-        float r1 = sqrt(1.0 - r);
-        float r2 = sqrt(r);
-        float t1 = UNITY_PI * 2 * nrand(uv, 4);
-        float t2 = UNITY_PI * 2 * nrand(uv, 5);
-        return float4(sin(t1) * r1, cos(t1) * r1, sin(t2) * r2, cos(t2) * r2);
-    }
-
-    // Position dependant velocity field
-    float3 get_velocity(float3 p, float2 uv)
+    float4 new_particle_velocity(float2 uv)
     {
         // Random vector
         float3 v = float3(nrand(uv, 6), nrand(uv, 7), nrand(uv, 8));
@@ -94,16 +81,19 @@ Shader "Hidden/Kvant/Spray/Kernel"
         // Random speed
         v = normalize(v) * lerp(_SpeedParams.x, _SpeedParams.y, nrand(uv, 9));
 
-        // Noise vector
-        p = (p + _Config.w * _NoiseParams.z) * _NoiseParams.x;
-        //float nx = snoise(p + float3(138.2, 0, 0));
-        //float ny = snoise(p + float3(0, 138.2, 0));
-        //float nz = snoise(p + float3(0, 0, 138.2));
-        float3 n1 = snoise_grad(p + float3(138.2, 0, 0));
-        float3 n2 = snoise_grad(p + float3(0, 138.2, 0));
-        float3 vn = cross(n1, n2);
+        return float4(v, 0);
+    }
 
-        return v + vn * _NoiseParams.y;
+    float4 new_particle_rotation(float2 uv)
+    {
+        // Uniform random unit quaternion
+        // http://www.realtimerendering.com/resources/GraphicsGems/gemsiii/urot.c
+        float r = nrand(uv, 3);
+        float r1 = sqrt(1.0 - r);
+        float r2 = sqrt(r);
+        float t1 = UNITY_PI * 2 * nrand(uv, 4);
+        float t2 = UNITY_PI * 2 * nrand(uv, 5);
+        return float4(sin(t1) * r1, cos(t1) * r1, sin(t2) * r2, cos(t2) * r2);
     }
 
     // Deterministic random rotation axis
@@ -126,7 +116,7 @@ Shader "Hidden/Kvant/Spray/Kernel"
     // Pass 1: initial velocity
     float4 frag_init_velocity(v2f_img i) : SV_Target
     {
-        return 0;
+        return new_particle_velocity(i.uv);
     }
 
     // Pass 2: initial rotation
@@ -139,6 +129,7 @@ Shader "Hidden/Kvant/Spray/Kernel"
     float4 frag_update_position(v2f_img i) : SV_Target
     {
         float4 p = tex2D(_PositionTex, i.uv);
+        float3 v = tex2D(_VelocityTex, i.uv).xyz;
 
         // Decaying
         float dt = _Config.z;
@@ -147,7 +138,7 @@ Shader "Hidden/Kvant/Spray/Kernel"
         if (p.w > -0.5)
         {
             // Position update
-            p.xyz += get_velocity(p.xyz, i.uv) * dt;
+            p.xyz += v * dt;
             return p;
         }
         else
@@ -160,7 +151,26 @@ Shader "Hidden/Kvant/Spray/Kernel"
     // Pass 4: velocity update
     float4 frag_update_velocity(v2f_img i) : SV_Target
     {
-        return tex2D(_VelocityTex, i.uv);
+        float4 p = tex2D(_PositionTex, i.uv);
+        float3 v = tex2D(_VelocityTex, i.uv).xyz;
+
+        if (p.w < 0.5)
+        {
+            float dt = _Config.z;
+            v *= exp(-1.3 * dt);
+            v -= float3(0, 2, 0) * dt;
+            // Noise vector
+            p = (p + float4(0, _Config.w * _NoiseParams.z, 0, 0)) * _NoiseParams.x;
+            float3 n1 = snoise_grad(p + float3(138.2, 0, 0));
+            float3 n2 = snoise_grad(p + float3(0, 138.2, 0));
+            float3 vn = cross(n1, n2);
+            return float4(v + vn * _NoiseParams.y * dt, 0);
+        }
+        else
+        {
+            // Respawn
+            return new_particle_velocity(i.uv);
+        }
     }
 
     // Pass 5: rotation update
