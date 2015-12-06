@@ -15,8 +15,8 @@ namespace Kvant
         SerializedProperty _emitterSize;
         SerializedProperty _throttle;
 
-        SerializedProperty _minLife;
-        SerializedProperty _maxLife;
+        SerializedProperty _life;
+        SerializedProperty _lifeRandomness;
 
         SerializedProperty _initialVelocity;
         SerializedProperty _directionSpread;
@@ -34,8 +34,8 @@ namespace Kvant
         SerializedProperty _noiseMotion;
 
         SerializedProperty _shapes;
-        SerializedProperty _minScale;
-        SerializedProperty _maxScale;
+        SerializedProperty _scale;
+        SerializedProperty _scaleRandomness;
         SerializedProperty _material;
         SerializedProperty _castShadows;
         SerializedProperty _receiveShadows;
@@ -45,11 +45,9 @@ namespace Kvant
 
         static GUIContent _textCenter    = new GUIContent("Center");
         static GUIContent _textSize      = new GUIContent("Size");
-        static GUIContent _textLife      = new GUIContent("Life");
         static GUIContent _textMotion    = new GUIContent("Motion");
         static GUIContent _textAmplitude = new GUIContent("Amplitude");
         static GUIContent _textFrequency = new GUIContent("Frequency");
-        static GUIContent _textScale     = new GUIContent("Scale");
 
         void OnEnable()
         {
@@ -58,8 +56,8 @@ namespace Kvant
             _emitterSize   = serializedObject.FindProperty("_emitterSize");
             _throttle      = serializedObject.FindProperty("_throttle");
 
-            _minLife = serializedObject.FindProperty("_minLife");
-            _maxLife = serializedObject.FindProperty("_maxLife");
+            _life           = serializedObject.FindProperty("_life");
+            _lifeRandomness = serializedObject.FindProperty("_lifeRandomness");
 
             _initialVelocity = serializedObject.FindProperty("_initialVelocity");
             _directionSpread = serializedObject.FindProperty("_directionSpread");
@@ -76,12 +74,12 @@ namespace Kvant
             _noiseFrequency = serializedObject.FindProperty("_noiseFrequency");
             _noiseMotion    = serializedObject.FindProperty("_noiseMotion");
 
-            _shapes         = serializedObject.FindProperty("_shapes");
-            _minScale       = serializedObject.FindProperty("_minScale");
-            _maxScale       = serializedObject.FindProperty("_maxScale");
-            _material       = serializedObject.FindProperty("_material");
-            _castShadows    = serializedObject.FindProperty("_castShadows");
-            _receiveShadows = serializedObject.FindProperty("_receiveShadows");
+            _shapes          = serializedObject.FindProperty("_shapes");
+            _scale           = serializedObject.FindProperty("_scale");
+            _scaleRandomness = serializedObject.FindProperty("_scaleRandomness");
+            _material        = serializedObject.FindProperty("_material");
+            _castShadows     = serializedObject.FindProperty("_castShadows");
+            _receiveShadows  = serializedObject.FindProperty("_receiveShadows");
 
             _randomSeed = serializedObject.FindProperty("_randomSeed");
             _debug      = serializedObject.FindProperty("_debug");
@@ -111,7 +109,8 @@ namespace Kvant
 
             EditorGUILayout.Space();
 
-            MinMaxSlider(_textLife, _minLife, _maxLife, 0.1f, 5.0f);
+            EditorGUILayout.PropertyField(_life);
+            EditorGUILayout.PropertyField(_lifeRandomness);
 
             EditorGUILayout.Space();
 
@@ -148,7 +147,8 @@ namespace Kvant
             if (EditorGUI.EndChangeCheck())
                 targetSpray.NotifyConfigChange();
 
-            MinMaxSlider(_textScale, _minScale, _maxScale, 0.01f, 2.0f);
+            EditorGUILayout.PropertyField(_scale);
+            EditorGUILayout.PropertyField(_scaleRandomness);
 
             EditorGUILayout.PropertyField(_material);
             EditorGUILayout.PropertyField(_castShadows);
@@ -160,47 +160,6 @@ namespace Kvant
             EditorGUILayout.PropertyField(_debug);
 
             serializedObject.ApplyModifiedProperties();
-        }
-
-        void MinMaxSlider(GUIContent label, SerializedProperty propMin, SerializedProperty propMax, float minLimit, float maxLimit)
-        {
-            var min = propMin.floatValue;
-            var max = propMax.floatValue;
-
-            EditorGUI.BeginChangeCheck();
-
-            // Min-max slider.
-            EditorGUILayout.MinMaxSlider(label, ref min, ref max, minLimit, maxLimit);
-
-            var prevIndent = EditorGUI.indentLevel;
-            EditorGUI.indentLevel = 0;
-
-            // Float value boxes.
-            var rect = EditorGUILayout.GetControlRect();
-            rect.x += EditorGUIUtility.labelWidth;
-            rect.width = (rect.width - EditorGUIUtility.labelWidth) / 2 - 2;
-
-            if (EditorGUIUtility.wideMode)
-            {
-                EditorGUIUtility.labelWidth = 28;
-                min = Mathf.Clamp(EditorGUI.FloatField(rect, "min", min), minLimit, max);
-                rect.x += rect.width + 4;
-                max = Mathf.Clamp(EditorGUI.FloatField(rect, "max", max), min, maxLimit);
-                EditorGUIUtility.labelWidth = 0;
-            }
-            else
-            {
-                min = Mathf.Clamp(EditorGUI.FloatField(rect, min), minLimit, max);
-                rect.x += rect.width + 4;
-                max = Mathf.Clamp(EditorGUI.FloatField(rect, max), min, maxLimit);
-            }
-
-            EditorGUI.indentLevel = prevIndent;
-
-            if (EditorGUI.EndChangeCheck()) {
-                propMin.floatValue = min;
-                propMax.floatValue = max;
-            }
         }
     }
 }

@@ -56,19 +56,19 @@ namespace Kvant
         #region Life Parameters
 
         [SerializeField]
-        float _minLife = 1.0f;
+        float _life = 4.0f;
 
-        public float minLife {
-            get { return _minLife; }
-            set { _minLife = value; }
+        public float life {
+            get { return _life; }
+            set { _life = value; }
         }
 
-        [SerializeField]
-        float _maxLife = 4.0f;
+        [SerializeField, Range(0, 1)]
+        float _lifeRandomness = 0.6f;
 
-        public float maxLife {
-            get { return _maxLife; }
-            set { _maxLife = value; }
+        public float lifeRandomness {
+            get { return _lifeRandomness; }
+            set { _lifeRandomness = value; }
         }
 
         #endregion
@@ -183,19 +183,19 @@ namespace Kvant
         Mesh[] _shapes = new Mesh[1];
 
         [SerializeField]
-        float _minScale = 0.1f;
+        float _scale = 1.0f;
 
-        public float minScale {
-            get { return _minScale; }
-            set { _minScale = value; }
+        public float scale {
+            get { return _scale; }
+            set { _scale = value; }
         }
 
-        [SerializeField]
-        float _maxScale = 1.2f;
+        [SerializeField, Range(0, 1)]
+        float _scaleRandomness = 0.5f;
 
-        public float maxScale {
-            get { return _maxScale; }
-            set { _maxScale = value; }
+        public float scaleRandomness {
+            get { return _scaleRandomness; }
+            set { _scaleRandomness = value; }
         }
 
         [SerializeField]
@@ -318,7 +318,9 @@ namespace Kvant
             m.SetVector("_EmitterPos", _emitterCenter);
             m.SetVector("_EmitterSize", _emitterSize);
 
-            m.SetVector("_LifeParams", new Vector2(1.0f / _minLife, 1.0f / _maxLife));
+            var invLifeMax = 1.0f / Mathf.Max(_life, 0.01f);
+            var invLifeMin = invLifeMax / Mathf.Max(1 - _lifeRandomness, 0.01f);
+            m.SetVector("_LifeParams", new Vector2(invLifeMin, invLifeMax));
 
             if (_initialVelocity == Vector3.zero)
             {
@@ -342,6 +344,14 @@ namespace Kvant
             m.SetVector("_SpinParams", sparams);
 
             m.SetVector("_NoiseParams", new Vector2(_noiseFrequency, _noiseAmplitude));
+
+            // Move the noise offset backward in the direction of the
+            // acceleration vector, or simply slide up when no acceleration.
+            if (_acceleration == Vector3.zero)
+                _noiseOffset += Vector3.up * _noiseMotion * deltaTime;
+            else
+                _noiseOffset += _acceleration.normalized * _noiseMotion * deltaTime;
+
             m.SetVector("_NoiseOffset", _noiseOffset);
 
             m.SetVector("_Config", new Vector4(_throttle, _randomSeed, deltaTime, Time.time));
@@ -372,7 +382,6 @@ namespace Kvant
             if (!_debugMaterial)  _debugMaterial  = CreateMaterial(_debugShader);
 
             // Warming up
-            UpdateKernelShader();
             InitializeAndPrewarmBuffers();
 
             _needsReset = false;
@@ -380,11 +389,18 @@ namespace Kvant
 
         void InitializeAndPrewarmBuffers()
         {
+            _noiseOffset = Vector3.zero;
+
+            UpdateKernelShader();
+
             Graphics.Blit(null, _positionBuffer2, _kernelMaterial, 0);
             Graphics.Blit(null, _velocityBuffer2, _kernelMaterial, 1);
             Graphics.Blit(null, _rotationBuffer2, _kernelMaterial, 2);
 
-            for (var i = 0; i < 8; i++) SwapBuffersAndInvokeKernels();
+            for (var i = 0; i < 8; i++) {
+                SwapBuffersAndInvokeKernels();
+                UpdateKernelShader();
+            }
         }
 
         void SwapBuffersAndInvokeKernels()
@@ -441,26 +457,22 @@ namespace Kvant
         {
             if (_needsReset) ResetResources();
 
-            // Move backward in the direction of the acceleration vector,
-            // or simply slide up when the acceleration is zero.
-            if (_acceleration == Vector3.zero)
-                _noiseOffset += Vector3.up * _noiseMotion * deltaTime;
-            else
-                _noiseOffset += _acceleration.normalized * _noiseMotion * deltaTime;
-
-            UpdateKernelShader();
-
             if (Application.isPlaying)
+            {
+                UpdateKernelShader();
                 SwapBuffersAndInvokeKernels();
+            }
             else
+            {
                 InitializeAndPrewarmBuffers();
+            }
 
             // Make a material property block for the following drawcalls.
             var props = new MaterialPropertyBlock();
             props.SetTexture("_PositionBuffer", _positionBuffer2);
             props.SetTexture("_RotationBuffer", _rotationBuffer2);
-            props.SetFloat("_ScaleMin", _minScale);
-            props.SetFloat("_ScaleMax", _maxScale);
+            props.SetFloat("_ScaleMin", _scale * (1 - _scaleRandomness));
+            props.SetFloat("_ScaleMax", _scale);
             props.SetFloat("_RandomSeed", _randomSeed);
 
             // Temporary variables

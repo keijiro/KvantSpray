@@ -114,7 +114,7 @@ Shader "Hidden/Kvant/Spray/Kernel"
     // Pass 0: initial position
     float4 frag_init_position(v2f_img i) : SV_Target
     {
-        return new_particle_position(i.uv);
+        return new_particle_position(i.uv) - float4(0, 0, 0, nrand(i.uv, 14));
     }
 
     // Pass 1: initial velocity
