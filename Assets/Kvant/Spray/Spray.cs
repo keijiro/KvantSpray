@@ -108,6 +108,22 @@ namespace Kvant
         }
 
         [SerializeField]
+        Vector3 _acceleration = Vector3.zero;
+
+        public Vector3 acceleration {
+            get { return _acceleration; }
+            set { _acceleration = value; }
+        }
+
+        [SerializeField, Range(0, 3)]
+        float _drag = 0;
+
+        public float drag {
+            get { return _drag; }
+            set { _drag = value; }
+        }
+
+        [SerializeField]
         float _minSpin = 30.0f;
 
         public float minSpin {
@@ -301,6 +317,10 @@ namespace Kvant
             var pi360 = Mathf.PI / 360;
             var sparams = new Vector4(_minSpeed, _maxSpeed, _minSpin * pi360, _maxSpin * pi360);
             m.SetVector("_SpeedParams", sparams);
+
+            var drag = Mathf.Exp(-_drag * deltaTime);
+            var aparams = new Vector4(_acceleration.x, _acceleration.y, _acceleration.z, drag);
+            m.SetVector("_AccelParams", aparams);
 
             var np = new Vector3(_noiseFrequency, _noiseAmplitude, _noiseSpeed);
             m.SetVector("_NoiseParams", np);

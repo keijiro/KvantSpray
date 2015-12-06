@@ -22,6 +22,10 @@ namespace Kvant
         SerializedProperty _maxSpeed;
         SerializedProperty _direction;
         SerializedProperty _spread;
+
+        SerializedProperty _acceleration;
+        SerializedProperty _drag;
+
         SerializedProperty _minSpin;
         SerializedProperty _maxSpin;
 
@@ -62,6 +66,10 @@ namespace Kvant
             _maxSpeed  = serializedObject.FindProperty("_maxSpeed");
             _direction = serializedObject.FindProperty("_direction");
             _spread    = serializedObject.FindProperty("_spread");
+
+            _acceleration = serializedObject.FindProperty("_acceleration");
+            _drag         = serializedObject.FindProperty("_drag");
+
             _minSpin   = serializedObject.FindProperty("_minSpin");
             _maxSpin   = serializedObject.FindProperty("_maxSpin");
 
@@ -112,6 +120,14 @@ namespace Kvant
             MinMaxSlider(_textSpeed, _minSpeed, _maxSpeed, 0.0f, 30.0f);
             EditorGUILayout.PropertyField(_direction);
             EditorGUILayout.PropertyField(_spread);
+
+            EditorGUILayout.Space();
+
+            EditorGUILayout.PropertyField(_acceleration);
+            EditorGUILayout.PropertyField(_drag);
+
+            EditorGUILayout.Space();
+
             MinMaxSlider(_textSpin, _minSpin, _maxSpin, 0.0f, 1000.0f);
 
             EditorGUILayout.Space();

@@ -34,6 +34,7 @@ Shader "Hidden/Kvant/Spray/Kernel"
     float2 _LifeParams;  // 1/min, 1/max
     float4 _Direction;   // x, y, z, spread
     float4 _SpeedParams; // min, max, minSpin, maxSpin
+    float4 _AccelParams; // x, y, z, drag
     float4 _NoiseParams; // freq, amp, speed
     float4 _Config;      // throttle, random seed, dT, time
 
@@ -157,8 +158,8 @@ Shader "Hidden/Kvant/Spray/Kernel"
         if (p.w < 0.5)
         {
             float dt = _Config.z;
-            v *= exp(-1.3 * dt);
-            v -= float3(0, 2, 0) * dt;
+            v *= _AccelParams.w;
+            v += _AccelParams.xyz * dt;
             // Noise vector
             p = (p + float4(0, _Config.w * _NoiseParams.z, 0, 0)) * _NoiseParams.x;
             float3 n1 = snoise_grad(p + float3(138.2, 0, 0));
@@ -177,10 +178,12 @@ Shader "Hidden/Kvant/Spray/Kernel"
     float4 frag_update_rotation(v2f_img i) : SV_Target
     {
         float4 r = tex2D(_RotationBuffer, i.uv);
+        float3 v = tex2D(_VelocityBuffer, i.uv).xyz;
 
         // Delta rotation
         float dt = _Config.z;
         float theta = lerp(_SpeedParams.z, _SpeedParams.w, nrand(i.uv, 13)) * dt;
+        theta *= lerp(length(v), 1.0, 0.8);
         float4 dq = float4(get_rotation_axis(i.uv) * sin(theta), cos(theta));
 
         // Applying delta rotation and normalization.
