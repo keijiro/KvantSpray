@@ -124,19 +124,27 @@ namespace Kvant
         }
 
         [SerializeField]
-        float _minSpin = 30.0f;
+        float _spin = 20.0f;
 
-        public float minSpin {
-            get { return _minSpin; }
-            set { _minSpin = value; }
+        public float spin {
+            get { return _spin; }
+            set { _spin = value; }
         }
 
         [SerializeField]
-        float _maxSpin = 200.0f;
+        float _speedToSpin = 300.0f;
 
-        public float maxSpin {
-            get { return _maxSpin; }
-            set { _maxSpin = value; }
+        public float speedToSpin {
+            get { return _speedToSpin; }
+            set { _speedToSpin = value; }
+        }
+
+        [SerializeField, Range(0, 1)]
+        float _spinRandomness = 0.3f;
+
+        public float spinRandomness {
+            get { return _spinRandomness; }
+            set { _spinRandomness = value; }
         }
 
         #endregion
@@ -314,9 +322,11 @@ namespace Kvant
             var dir = new Vector4(_direction.x, _direction.y, _direction.z, _spread);
             m.SetVector("_Direction", dir);
 
+            m.SetVector("_SpeedParams", new Vector2(_minSpeed, _maxSpeed));
+
             var pi360 = Mathf.PI / 360;
-            var sparams = new Vector4(_minSpeed, _maxSpeed, _minSpin * pi360, _maxSpin * pi360);
-            m.SetVector("_SpeedParams", sparams);
+            var sparams = new Vector3(_spin * pi360, _speedToSpin * pi360, _spinRandomness);
+            m.SetVector("_SpinParams", sparams);
 
             var drag = Mathf.Exp(-_drag * deltaTime);
             var aparams = new Vector4(_acceleration.x, _acceleration.y, _acceleration.z, drag);

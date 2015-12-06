@@ -26,8 +26,9 @@ namespace Kvant
         SerializedProperty _acceleration;
         SerializedProperty _drag;
 
-        SerializedProperty _minSpin;
-        SerializedProperty _maxSpin;
+        SerializedProperty _spin;
+        SerializedProperty _speedToSpin;
+        SerializedProperty _spinRandomness;
 
         SerializedProperty _noiseAmplitude;
         SerializedProperty _noiseFrequency;
@@ -43,14 +44,14 @@ namespace Kvant
         SerializedProperty _randomSeed;
         SerializedProperty _debug;
 
-        static GUIContent _textCenter    = new GUIContent("Center");
-        static GUIContent _textSize      = new GUIContent("Size");
-        static GUIContent _textLife      = new GUIContent("Life");
-        static GUIContent _textSpeed     = new GUIContent("Speed");
-        static GUIContent _textSpin      = new GUIContent("Spin");
-        static GUIContent _textAmplitude = new GUIContent("Amplitude");
-        static GUIContent _textFrequency = new GUIContent("Frequency");
-        static GUIContent _textScale     = new GUIContent("Scale");
+        static GUIContent _textCenter     = new GUIContent("Center");
+        static GUIContent _textSize       = new GUIContent("Size");
+        static GUIContent _textLife       = new GUIContent("Life");
+        static GUIContent _textSpeed      = new GUIContent("Speed");
+        static GUIContent _textAmplitude  = new GUIContent("Amplitude");
+        static GUIContent _textFrequency  = new GUIContent("Frequency");
+        static GUIContent _textScale      = new GUIContent("Scale");
+        static GUIContent _textRandomness = new GUIContent("Randomness");
 
         void OnEnable()
         {
@@ -70,8 +71,9 @@ namespace Kvant
             _acceleration = serializedObject.FindProperty("_acceleration");
             _drag         = serializedObject.FindProperty("_drag");
 
-            _minSpin   = serializedObject.FindProperty("_minSpin");
-            _maxSpin   = serializedObject.FindProperty("_maxSpin");
+            _spin           = serializedObject.FindProperty("_spin");
+            _speedToSpin    = serializedObject.FindProperty("_speedToSpin");
+            _spinRandomness = serializedObject.FindProperty("_spinRandomness");
 
             _noiseAmplitude = serializedObject.FindProperty("_noiseAmplitude");
             _noiseFrequency = serializedObject.FindProperty("_noiseFrequency");
@@ -128,7 +130,10 @@ namespace Kvant
 
             EditorGUILayout.Space();
 
-            MinMaxSlider(_textSpin, _minSpin, _maxSpin, 0.0f, 1000.0f);
+            EditorGUILayout.LabelField("Rotation", EditorStyles.boldLabel);
+            EditorGUILayout.PropertyField(_spin);
+            EditorGUILayout.PropertyField(_speedToSpin);
+            EditorGUILayout.PropertyField(_spinRandomness, _textRandomness);
 
             EditorGUILayout.Space();
 

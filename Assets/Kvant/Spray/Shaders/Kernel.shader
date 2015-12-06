@@ -33,7 +33,8 @@ Shader "Hidden/Kvant/Spray/Kernel"
     float3 _EmitterSize;
     float2 _LifeParams;  // 1/min, 1/max
     float4 _Direction;   // x, y, z, spread
-    float4 _SpeedParams; // min, max, minSpin, maxSpin
+    float2 _SpeedParams; // min, max
+    float3 _SpinParams;  // spin, speed-to-spin, random
     float4 _AccelParams; // x, y, z, drag
     float4 _NoiseParams; // freq, amp, speed
     float4 _Config;      // throttle, random seed, dT, time
@@ -180,13 +181,17 @@ Shader "Hidden/Kvant/Spray/Kernel"
         float4 r = tex2D(_RotationBuffer, i.uv);
         float3 v = tex2D(_VelocityBuffer, i.uv).xyz;
 
-        // Delta rotation
+        // Delta angle
         float dt = _Config.z;
-        float theta = lerp(_SpeedParams.z, _SpeedParams.w, nrand(i.uv, 13)) * dt;
-        theta *= lerp(length(v), 1.0, 0.8);
+        float theta = (_SpinParams.x + length(v) * _SpinParams.y) * dt;
+
+        // Randomness
+        theta *= 1.0 - nrand(i.uv, 13) * _SpinParams.z;
+
+        // Spin quaternion
         float4 dq = float4(get_rotation_axis(i.uv) * sin(theta), cos(theta));
 
-        // Applying delta rotation and normalization.
+        // Applying the quaternion and normalize the result.
         return normalize(qmul(dq, r));
     }
 
