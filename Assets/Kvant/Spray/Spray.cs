@@ -76,36 +76,32 @@ namespace Kvant
         #region Velocity Parameters
 
         [SerializeField]
-        float _minSpeed = 2.0f;
+        Vector3 _initialVelocity = Vector3.forward * 4.0f;
 
-        public float minSpeed {
-            get { return _minSpeed; }
-            set { _minSpeed = value; }
-        }
-
-        [SerializeField]
-        float _maxSpeed = 10.0f;
-
-        public float maxSpeed {
-            get { return _maxSpeed; }
-            set { _maxSpeed = value; }
-        }
-
-        [SerializeField]
-        Vector3 _direction = Vector3.forward;
-
-        public Vector3 direction {
-            get { return _direction; }
-            set { _direction = value; }
+        public Vector3 initialVelocity {
+            get { return _initialVelocity; }
+            set { _initialVelocity = value; }
         }
 
         [SerializeField, Range(0, 1)]
-        float _spread = 0.2f;
+        float _directionSpread = 0.2f;
 
-        public float spread {
-            get { return _spread; }
-            set { _spread = value; }
+        public float directionSpread {
+            get { return _directionSpread; }
+            set { _directionSpread = value; }
         }
+
+        [SerializeField, Range(0, 1)]
+        float _speedRandomness = 0.5f;
+
+        public float speedRandomness {
+            get { return _speedRandomness; }
+            set { _speedRandomness = value; }
+        }
+
+        #endregion
+
+        #region Acceleration Parameters
 
         [SerializeField]
         Vector3 _acceleration = Vector3.zero;
@@ -115,13 +111,17 @@ namespace Kvant
             set { _acceleration = value; }
         }
 
-        [SerializeField, Range(0, 3)]
-        float _drag = 0;
+        [SerializeField, Range(0, 4)]
+        float _drag = 0.1f;
 
         public float drag {
             get { return _drag; }
             set { _drag = value; }
         }
+
+        #endregion
+
+        #region Rotation Parameters
 
         [SerializeField]
         float _spin = 20.0f;
@@ -152,7 +152,7 @@ namespace Kvant
         #region Noise Parameters
 
         [SerializeField]
-        float _noiseAmplitude = 5.0f;
+        float _noiseAmplitude = 1.0f;
 
         public float noiseAmplitude {
             get { return _noiseAmplitude; }
@@ -168,11 +168,11 @@ namespace Kvant
         }
 
         [SerializeField]
-        float _noiseSpeed = 1.0f;
+        float _noiseMotion = 1.0f;
 
-        public float noiseSpeed {
-            get { return _noiseSpeed; }
-            set { _noiseSpeed = value; }
+        public float noiseMotion {
+            get { return _noiseMotion; }
+            set { _noiseMotion = value; }
         }
 
         #endregion
@@ -265,6 +265,7 @@ namespace Kvant
 
         #region Private Variables And Properties
 
+        Vector3 _noiseOffset;
         RenderTexture _positionBuffer1;
         RenderTexture _positionBuffer2;
         RenderTexture _velocityBuffer1;
@@ -319,21 +320,29 @@ namespace Kvant
 
             m.SetVector("_LifeParams", new Vector2(1.0f / _minLife, 1.0f / _maxLife));
 
-            var dir = new Vector4(_direction.x, _direction.y, _direction.z, _spread);
-            m.SetVector("_Direction", dir);
+            if (_initialVelocity == Vector3.zero)
+            {
+                m.SetVector("_Direction", new Vector4(0, 0, 1, 0));
+                m.SetVector("_SpeedParams", Vector4.zero);
+            }
+            else
+            {
+                var speed = _initialVelocity.magnitude;
+                var dir = _initialVelocity / speed;
+                m.SetVector("_Direction", new Vector4(dir.x, dir.y, dir.z, _directionSpread));
+                m.SetVector("_SpeedParams", new Vector2(speed, _speedRandomness));
+            }
 
-            m.SetVector("_SpeedParams", new Vector2(_minSpeed, _maxSpeed));
+            var drag = Mathf.Exp(-_drag * deltaTime);
+            var aparams = new Vector4(_acceleration.x, _acceleration.y, _acceleration.z, drag);
+            m.SetVector("_Acceleration", aparams);
 
             var pi360 = Mathf.PI / 360;
             var sparams = new Vector3(_spin * pi360, _speedToSpin * pi360, _spinRandomness);
             m.SetVector("_SpinParams", sparams);
 
-            var drag = Mathf.Exp(-_drag * deltaTime);
-            var aparams = new Vector4(_acceleration.x, _acceleration.y, _acceleration.z, drag);
-            m.SetVector("_AccelParams", aparams);
-
-            var np = new Vector3(_noiseFrequency, _noiseAmplitude, _noiseSpeed);
-            m.SetVector("_NoiseParams", np);
+            m.SetVector("_NoiseParams", new Vector2(_noiseFrequency, _noiseAmplitude));
+            m.SetVector("_NoiseOffset", _noiseOffset);
 
             m.SetVector("_Config", new Vector4(_throttle, _randomSeed, deltaTime, Time.time));
         }
@@ -431,6 +440,13 @@ namespace Kvant
         void Update()
         {
             if (_needsReset) ResetResources();
+
+            // Move backward in the direction of the acceleration vector,
+            // or simply slide up when the acceleration is zero.
+            if (_acceleration == Vector3.zero)
+                _noiseOffset += Vector3.up * _noiseMotion * deltaTime;
+            else
+                _noiseOffset += _acceleration.normalized * _noiseMotion * deltaTime;
 
             UpdateKernelShader();
 

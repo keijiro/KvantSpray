@@ -18,10 +18,9 @@ namespace Kvant
         SerializedProperty _minLife;
         SerializedProperty _maxLife;
 
-        SerializedProperty _minSpeed;
-        SerializedProperty _maxSpeed;
-        SerializedProperty _direction;
-        SerializedProperty _spread;
+        SerializedProperty _initialVelocity;
+        SerializedProperty _directionSpread;
+        SerializedProperty _speedRandomness;
 
         SerializedProperty _acceleration;
         SerializedProperty _drag;
@@ -32,7 +31,7 @@ namespace Kvant
 
         SerializedProperty _noiseAmplitude;
         SerializedProperty _noiseFrequency;
-        SerializedProperty _noiseSpeed;
+        SerializedProperty _noiseMotion;
 
         SerializedProperty _shapes;
         SerializedProperty _minScale;
@@ -44,14 +43,13 @@ namespace Kvant
         SerializedProperty _randomSeed;
         SerializedProperty _debug;
 
-        static GUIContent _textCenter     = new GUIContent("Center");
-        static GUIContent _textSize       = new GUIContent("Size");
-        static GUIContent _textLife       = new GUIContent("Life");
-        static GUIContent _textSpeed      = new GUIContent("Speed");
-        static GUIContent _textAmplitude  = new GUIContent("Amplitude");
-        static GUIContent _textFrequency  = new GUIContent("Frequency");
-        static GUIContent _textScale      = new GUIContent("Scale");
-        static GUIContent _textRandomness = new GUIContent("Randomness");
+        static GUIContent _textCenter    = new GUIContent("Center");
+        static GUIContent _textSize      = new GUIContent("Size");
+        static GUIContent _textLife      = new GUIContent("Life");
+        static GUIContent _textMotion    = new GUIContent("Motion");
+        static GUIContent _textAmplitude = new GUIContent("Amplitude");
+        static GUIContent _textFrequency = new GUIContent("Frequency");
+        static GUIContent _textScale     = new GUIContent("Scale");
 
         void OnEnable()
         {
@@ -63,10 +61,9 @@ namespace Kvant
             _minLife = serializedObject.FindProperty("_minLife");
             _maxLife = serializedObject.FindProperty("_maxLife");
 
-            _minSpeed  = serializedObject.FindProperty("_minSpeed");
-            _maxSpeed  = serializedObject.FindProperty("_maxSpeed");
-            _direction = serializedObject.FindProperty("_direction");
-            _spread    = serializedObject.FindProperty("_spread");
+            _initialVelocity = serializedObject.FindProperty("_initialVelocity");
+            _directionSpread = serializedObject.FindProperty("_directionSpread");
+            _speedRandomness = serializedObject.FindProperty("_speedRandomness");
 
             _acceleration = serializedObject.FindProperty("_acceleration");
             _drag         = serializedObject.FindProperty("_drag");
@@ -77,7 +74,7 @@ namespace Kvant
 
             _noiseAmplitude = serializedObject.FindProperty("_noiseAmplitude");
             _noiseFrequency = serializedObject.FindProperty("_noiseFrequency");
-            _noiseSpeed     = serializedObject.FindProperty("_noiseSpeed");
+            _noiseMotion    = serializedObject.FindProperty("_noiseMotion");
 
             _shapes         = serializedObject.FindProperty("_shapes");
             _minScale       = serializedObject.FindProperty("_minScale");
@@ -119,9 +116,9 @@ namespace Kvant
             EditorGUILayout.Space();
 
             EditorGUILayout.LabelField("Velocity", EditorStyles.boldLabel);
-            MinMaxSlider(_textSpeed, _minSpeed, _maxSpeed, 0.0f, 30.0f);
-            EditorGUILayout.PropertyField(_direction);
-            EditorGUILayout.PropertyField(_spread);
+            EditorGUILayout.PropertyField(_initialVelocity);
+            EditorGUILayout.PropertyField(_directionSpread);
+            EditorGUILayout.PropertyField(_speedRandomness);
 
             EditorGUILayout.Space();
 
@@ -133,14 +130,14 @@ namespace Kvant
             EditorGUILayout.LabelField("Rotation", EditorStyles.boldLabel);
             EditorGUILayout.PropertyField(_spin);
             EditorGUILayout.PropertyField(_speedToSpin);
-            EditorGUILayout.PropertyField(_spinRandomness, _textRandomness);
+            EditorGUILayout.PropertyField(_spinRandomness);
 
             EditorGUILayout.Space();
 
             EditorGUILayout.LabelField("Turbulent Noise", EditorStyles.boldLabel);
-            EditorGUILayout.Slider(_noiseAmplitude, 0.0f, 20.0f, _textAmplitude);
-            EditorGUILayout.Slider(_noiseFrequency, 0.01f, 1.0f, _textFrequency);
-            EditorGUILayout.Slider(_noiseSpeed, 0.0f, 10.0f, _textSpeed);
+            EditorGUILayout.PropertyField(_noiseAmplitude, _textAmplitude);
+            EditorGUILayout.PropertyField(_noiseFrequency, _textFrequency);
+            EditorGUILayout.PropertyField(_noiseMotion, _textMotion);
 
             EditorGUILayout.Space();
 

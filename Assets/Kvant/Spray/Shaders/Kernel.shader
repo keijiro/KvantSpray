@@ -31,13 +31,14 @@ Shader "Hidden/Kvant/Spray/Kernel"
 
     float3 _EmitterPos;
     float3 _EmitterSize;
-    float2 _LifeParams;  // 1/min, 1/max
-    float4 _Direction;   // x, y, z, spread
-    float2 _SpeedParams; // min, max
-    float3 _SpinParams;  // spin, speed-to-spin, random
-    float4 _AccelParams; // x, y, z, drag
-    float4 _NoiseParams; // freq, amp, speed
-    float4 _Config;      // throttle, random seed, dT, time
+    float2 _LifeParams;   // 1/min, 1/max
+    float4 _Direction;    // x, y, z, spread
+    float2 _SpeedParams;  // speed, randomness
+    float4 _Acceleration; // x, y, z, drag
+    float3 _SpinParams;   // spin*2, speed-to-spin*2, randomness
+    float2 _NoiseParams;  // freq, amp
+    float3 _NoiseOffset;
+    float4 _Config;       // throttle, random seed, dT, time
 
     // PRNG function
     float nrand(float2 uv, float salt)
@@ -80,8 +81,9 @@ Shader "Hidden/Kvant/Spray/Kernel"
         // Spreading
         v = lerp(_Direction.xyz, v, _Direction.w);
 
-        // Random speed
-        v = normalize(v) * lerp(_SpeedParams.x, _SpeedParams.y, nrand(uv, 9));
+        // Speed
+        v = normalize(v) * _SpeedParams.x;
+        v *= 1.0 - nrand(uv, 9) * _SpeedParams.y;
 
         return float4(v, 0);
     }
@@ -158,15 +160,20 @@ Shader "Hidden/Kvant/Spray/Kernel"
 
         if (p.w < 0.5)
         {
+            // Drag
+            v *= _Acceleration.w; // dt is pre-applied in script
+
+            // Constant acceleration
             float dt = _Config.z;
-            v *= _AccelParams.w;
-            v += _AccelParams.xyz * dt;
-            // Noise vector
-            p = (p + float4(0, _Config.w * _NoiseParams.z, 0, 0)) * _NoiseParams.x;
-            float3 n1 = snoise_grad(p + float3(138.2, 0, 0));
-            float3 n2 = snoise_grad(p + float3(0, 138.2, 0));
-            float3 vn = cross(n1, n2);
-            return float4(v + vn * _NoiseParams.y * dt, 0);
+            v += _Acceleration.xyz * dt;
+
+            // Acceleration by turbulent noise
+            float3 np = (p.xyz + _NoiseOffset) * _NoiseParams.x;
+            float3 n1 = snoise_grad(np);
+            float3 n2 = snoise_grad(np + float3(0, 13.28, 0));
+            v += cross(n1, n2) * _NoiseParams.y * dt;
+
+            return float4(v, 0);
         }
         else
         {
