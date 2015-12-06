@@ -114,6 +114,7 @@ Shader "Hidden/Kvant/Spray/Kernel"
     // Pass 0: initial position
     float4 frag_init_position(v2f_img i) : SV_Target
     {
+        // Crate a new particle and randomize its initial life.
         return new_particle_position(i.uv) - float4(0, 0, 0, nrand(i.uv, 14));
     }
 
@@ -141,7 +142,7 @@ Shader "Hidden/Kvant/Spray/Kernel"
 
         if (p.w > -0.5)
         {
-            // Position update
+            // Applying the velocity
             p.xyz += v * dt;
             return p;
         }

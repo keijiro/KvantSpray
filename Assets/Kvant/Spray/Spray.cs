@@ -1,5 +1,5 @@
 ﻿//
-// Spray - mesh particle system
+// Spray - particle system
 //
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -25,7 +25,7 @@ namespace Kvant
 
         #endregion
 
-        #region Emitter Settings
+        #region Emitter Parameters
 
         [SerializeField]
         Vector3 _emitterCenter = Vector3.zero;
@@ -53,7 +53,7 @@ namespace Kvant
 
         #endregion
 
-        #region Life Parameters
+        #region Particle Life Parameters
 
         [SerializeField]
         float _life = 4.0f;
@@ -149,7 +149,7 @@ namespace Kvant
 
         #endregion
 
-        #region Noise Parameters
+        #region Turbulent Noise Parameters
 
         [SerializeField]
         float _noiseAmplitude = 1.0f;
@@ -345,8 +345,8 @@ namespace Kvant
 
             m.SetVector("_NoiseParams", new Vector2(_noiseFrequency, _noiseAmplitude));
 
-            // Move the noise offset backward in the direction of the
-            // acceleration vector, or simply slide up when no acceleration.
+            // Move the noise field backward in the direction of the
+            // acceleration vector, or simply pull up when no acceleration.
             if (_acceleration == Vector3.zero)
                 _noiseOffset += Vector3.up * _noiseMotion * deltaTime;
             else
