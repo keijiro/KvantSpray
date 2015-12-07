@@ -1,20 +1,31 @@
-KvantSpray
-==========
+Kvant/Spray v2
+==============
 
-A GPU accelerated mesh particle system for Unity
+*Spray* is a GPU accelerated object instancing/particle animation system for
+Unity.
 
-![screen](https://31.media.tumblr.com/4f77618c6eeedde49e40df634256bd32/tumblr_nowndpd3eR1qio469o1_400.gif)
+![gif](http://49.media.tumblr.com/544faef987784f4539d812d735e7d658/tumblr_nyy244izdE1qio469o1_400.gif)
+![gif](http://45.media.tumblr.com/46b6bf971afac9dcfbdd8a67d26ec858/tumblr_nyxgl2JiX01qio469o1_400.gif)
+
+*Spray* is part of the *Kvant* mesh effect suite. Please see the [GitHub
+repositories][kvant] for further information about the suite.
+
+[kvant]: https://github.com/search?q=kvant+user%3Akeijiro&type=Repositories
 
 System Requirements
 -------------------
 
 Unity 5.1 or later versions.
 
-Compatibility
--------------
+*Kvant* effects require floating-point HDR textures to store animation state.
+Most of mobile devices don't fulfill this requrement at the moment.
 
-KvantSpray needs a 4-component floating-point texture format. Basically, it
-means it runs only on desktop/laptop-class GPUs.
+No Backward Compatibility
+-------------------------
+
+This verion (v2) is not compatible with the previous versions. You can't simply
+upgrade the previous implementation or use two different versions in the same
+project. Sorry for the inconvenience!
 
 License
 -------

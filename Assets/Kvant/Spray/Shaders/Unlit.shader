@@ -5,11 +5,11 @@
 // position.xyz = vertex position
 // texcoord.xy  = uv for GPGPU buffers
 //
-// Texture format in position kernels:
+// Position buffer format:
 // .xyz = particle position
-// .w   = life
+// .w   = life (+0.5 -> -0.5)
 //
-// Texture format in rotation kernels:
+// Rotation buffer format:
 // .xyzw = particle rotation
 //
 Shader "Kvant/Spray/Transparent Unlit"

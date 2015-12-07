@@ -45,6 +45,20 @@ Material:
           m_Offset: {x: 0, y: 0}
       data:
         first:
+          name: _PositionBuffer
+        second:
+          m_Texture: {fileID: 0}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+      data:
+        first:
+          name: _RotationBuffer
+        second:
+          m_Texture: {fileID: 0}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+      data:
+        first:
           name: _ParallaxMap
         second:
           m_Texture: {fileID: 0}
@@ -85,20 +99,6 @@ Material:
           m_Texture: {fileID: 0}
           m_Scale: {x: 1, y: 1}
           m_Offset: {x: 0, y: 0}
-      data:
-        first:
-          name: _PositionBuffer
-        second:
-          m_Texture: {fileID: 0}
-          m_Scale: {x: 1, y: 1}
-          m_Offset: {x: 0, y: 0}
-      data:
-        first:
-          name: _RotationBuffer
-        second:
-          m_Texture: {fileID: 0}
-          m_Scale: {x: 1, y: 1}
-          m_Offset: {x: 0, y: 0}
     m_Floats:
       data:
         first:
@@ -115,7 +115,27 @@ Material:
       data:
         first:
           name: _Smoothness
-        second: .108000003
+        second: .400000006
+      data:
+        first:
+          name: _Metallic
+        second: .180000007
+      data:
+        first:
+          name: _ScaleMin
+        second: 1
+      data:
+        first:
+          name: _ScaleMax
+        second: 1
+      data:
+        first:
+          name: _ColorMode
+        second: 2
+      data:
+        first:
+          name: _RandomSeed
+        second: 0
       data:
         first:
           name: _Parallax
@@ -150,26 +170,6 @@ Material:
         second: 0
       data:
         first:
-          name: _Metallic
-        second: .305999994
-      data:
-        first:
-          name: _ScaleMin
-        second: 1
-      data:
-        first:
-          name: _ScaleMax
-        second: 1
-      data:
-        first:
-          name: _ColorMode
-        second: 2
-      data:
-        first:
-          name: _RandomSeed
-        second: 0
-      data:
-        first:
           name: _NormalScale
         second: 1
       data:
@@ -184,8 +184,12 @@ Material:
       data:
         first:
           name: _Color
-        second: {r: .995334744, g: 1, b: .661764741, a: 1}
+        second: {r: .781949341, g: 1, b: .367653191, a: 1}
       data:
         first:
           name: _Color2
-        second: {r: .496956289, g: 1, b: .0882353187, a: 1}
+        second: {r: .0557832457, g: 1, b: .0220588446, a: 1}
+      data:
+        first:
+          name: _Emission
+        second: {r: 0, g: 0, b: 0, a: 1}
