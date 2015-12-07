@@ -9,16 +9,31 @@ ModelImporter:
     100002: Icosphere
     100004: ipr_camera
     100006: Ring
+    100008: Disc
+    100010: Ring1
+    100012: Ring2
     400000: //RootNode
     400002: Icosphere
     400004: ipr_camera
     400006: Ring
+    400008: Disc
+    400010: Ring1
+    400012: Ring2
     2300000: Icosphere
     2300002: Ring
+    2300004: Disc
+    2300006: Ring1
+    2300008: Ring2
     3300000: Icosphere
     3300002: Ring
+    3300004: Disc
+    3300006: Ring1
+    3300008: Ring2
     4300000: Icosphere
     4300002: Ring
+    4300004: Ring1
+    4300006: Ring2
+    4300008: Disc
   materials:
     importMaterials: 0
     materialName: 0
