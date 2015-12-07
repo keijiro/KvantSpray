@@ -7,6 +7,9 @@ Unity.
 ![gif](http://49.media.tumblr.com/544faef987784f4539d812d735e7d658/tumblr_nyy244izdE1qio469o1_400.gif)
 ![gif](http://45.media.tumblr.com/46b6bf971afac9dcfbdd8a67d26ec858/tumblr_nyxgl2JiX01qio469o1_400.gif)
 
+![gif](http://49.media.tumblr.com/5dcc714bc4db78a25a13ef9f480be4bf/tumblr_nyzlwjgXDM1qio469o1_400.gif)
+![gif](http://49.media.tumblr.com/13a1f91f8c0e8081ecf02057fff6529e/tumblr_nyznffmyqC1qio469o1_400.gif)
+
 *Spray* is part of the *Kvant* mesh effect suite. Please see the [GitHub
 repositories][kvant] for further information about the suite.
 
