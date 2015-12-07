@@ -113,6 +113,74 @@ Transform:
   - {fileID: 562743195}
   m_Father: {fileID: 0}
   m_RootOrder: 0
+--- !u!1 &559828063
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 559828065}
+  - 114: {fileID: 559828064}
+  m_Layer: 0
+  m_Name: Spray
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &559828064
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 559828063}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 051131338091a4b3d861d193e64fb704, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _maxParticles: 1000
+  _emitterCenter: {x: -2.5, y: 1, z: 0}
+  _emitterSize: {x: .100000001, y: .100000001, z: .100000001}
+  _throttle: 1
+  _life: 2
+  _lifeRandomness: .600000024
+  _initialVelocity: {x: 18, y: 8, z: 0}
+  _directionSpread: .0799999982
+  _speedRandomness: .5
+  _acceleration: {x: 0, y: 3, z: 0}
+  _drag: 2.5
+  _spin: 40
+  _speedToSpin: 240
+  _spinRandomness: .600000024
+  _noiseAmplitude: 4
+  _noiseFrequency: .400000006
+  _noiseMotion: 3
+  _shapes:
+  - {fileID: 4300000, guid: 9693308a3efbb4f70b2e2ca1df26b2e9, type: 3}
+  _scale: .5
+  _scaleRandomness: .800000012
+  _material: {fileID: 2100000, guid: 4e7e239ddb586764ea254b37687454d4, type: 2}
+  _castShadows: 0
+  _receiveShadows: 0
+  _randomSeed: 100
+  _debug: 0
+  _defaultMaterial: {fileID: 2100000, guid: e1aad33bf16194534a7c99e7c01a8249, type: 2}
+  _kernelShader: {fileID: 4800000, guid: 5e5e161a3708e40119404232637809fc, type: 3}
+  _debugShader: {fileID: 4800000, guid: ad2397ccf551046ecb4df814f027d430, type: 3}
+--- !u!4 &559828065
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 559828063}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
 --- !u!1 &562743190
 GameObject:
   m_ObjectHideFlags: 0
@@ -338,7 +406,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 051131338091a4b3d861d193e64fb704, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxParticles: 2000
+  _maxParticles: 1000
   _emitterCenter: {x: -2.5, y: 1, z: 0}
   _emitterSize: {x: .100000001, y: .100000001, z: .100000001}
   _throttle: 1
@@ -356,11 +424,9 @@ MonoBehaviour:
   _noiseFrequency: .400000006
   _noiseMotion: 3
   _shapes:
-  - {fileID: 4300006, guid: d156dcf56f86f404393203fbed35c031, type: 3}
-  - {fileID: 4300004, guid: d156dcf56f86f404393203fbed35c031, type: 3}
-  - {fileID: 4300002, guid: d156dcf56f86f404393203fbed35c031, type: 3}
-  _scale: .769999981
-  _scaleRandomness: .200000003
+  - {fileID: 4300000, guid: 9693308a3efbb4f70b2e2ca1df26b2e9, type: 3}
+  _scale: .699999988
+  _scaleRandomness: .800000012
   _material: {fileID: 2100000, guid: b516e39e18a644c2a884db62ba4f7ee3, type: 2}
   _castShadows: 0
   _receiveShadows: 0

@@ -6,7 +6,7 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: Spray 3
+  m_Name: Flame 2
   m_Shader: {fileID: 4800000, guid: fc11471c70ec2478f80b9434bf45d6c1, type: 3}
   m_ShaderKeywords: _COLORMODE_ANIMATE
   m_LightmapFlags: 5
@@ -173,8 +173,8 @@ Material:
       data:
         first:
           name: _Color
-        second: {r: 1.62700009, g: 1.06101525, b: .454603016, a: 1}
+        second: {r: .279411793, g: .160250887, b: .160250887, a: 1}
       data:
         first:
           name: _Color2
-        second: {r: .786764741, g: 0, b: 0, a: 1}
+        second: {r: .352941155, g: .139638752, b: .0908304453, a: 1}
