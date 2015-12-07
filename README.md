@@ -10,7 +10,7 @@ Unity.
 ![gif](http://49.media.tumblr.com/5dcc714bc4db78a25a13ef9f480be4bf/tumblr_nyzlwjgXDM1qio469o1_400.gif)
 ![gif](http://49.media.tumblr.com/13a1f91f8c0e8081ecf02057fff6529e/tumblr_nyznffmyqC1qio469o1_400.gif)
 
-*Spray* is part of the *Kvant* mesh effect suite. Please see the [GitHub
+*Spray* is part of the *Kvant* effect suite. Please see the [GitHub
 repositories][kvant] for further information about the suite.
 
 [kvant]: https://github.com/search?q=kvant+user%3Akeijiro&type=Repositories
@@ -21,12 +21,12 @@ System Requirements
 Unity 5.1 or later versions.
 
 *Kvant* effects require floating-point HDR textures to store animation state.
-Most of mobile devices don't fulfill this requrement at the moment.
+Most of mobile devices don't fulfill this requirement at the moment.
 
 No Backward Compatibility
 -------------------------
 
-This verion (v2) is not compatible with the previous versions. You can't simply
+This version (v2) is not compatible with the previous versions. You can't simply
 upgrade the previous implementation or use two different versions in the same
 project. Sorry for the inconvenience!
 
