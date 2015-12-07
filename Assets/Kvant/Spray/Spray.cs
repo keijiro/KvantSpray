@@ -132,7 +132,7 @@ namespace Kvant
         }
 
         [SerializeField]
-        float _speedToSpin = 300.0f;
+        float _speedToSpin = 60.0f;
 
         public float speedToSpin {
             get { return _speedToSpin; }
