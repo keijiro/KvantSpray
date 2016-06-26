@@ -1,4 +1,4 @@
-﻿//
+//
 // KinoBloom - Bloom effect
 //
 // Copyright (C) 2015 Keijiro Takahashi

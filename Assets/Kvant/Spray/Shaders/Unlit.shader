@@ -1,4 +1,4 @@
-﻿//
+//
 // Transparent unlit shader for Spray
 //
 // Vertex format:

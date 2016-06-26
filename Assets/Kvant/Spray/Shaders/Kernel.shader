@@ -1,4 +1,4 @@
-﻿//
+//
 // GPGPU kernels for Spray
 //
 // Position buffer format:

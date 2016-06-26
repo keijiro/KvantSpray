@@ -1,4 +1,4 @@
-﻿//
+//
 // Spray - particle system
 //
 using UnityEngine;
