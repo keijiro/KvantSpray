@@ -275,6 +275,7 @@ namespace Kvant
         BulkMesh _bulkMesh;
         Material _kernelMaterial;
         Material _debugMaterial;
+        MaterialPropertyBlock _props;
         bool _needsReset = true;
 
         static float deltaTime {
@@ -468,7 +469,11 @@ namespace Kvant
             }
 
             // Make a material property block for the following drawcalls.
-            var props = new MaterialPropertyBlock();
+            if (_props == null)
+            {
+                _props = new MaterialPropertyBlock();
+            }
+            var props = _props;
             props.SetTexture("_PositionBuffer", _positionBuffer2);
             props.SetTexture("_RotationBuffer", _rotationBuffer2);
             props.SetFloat("_ScaleMin", _scale * (1 - _scaleRandomness));
